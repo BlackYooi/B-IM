@@ -26,9 +26,4 @@ public class BimCommonConfig extends BimBaseConfig {
      * 心跳时间间隔、单位-秒
     */
     protected Integer heartBeatInterval = 60 * 60;
-
-    /**
-     * 服务器端口
-     */
-    protected Integer port;
 }

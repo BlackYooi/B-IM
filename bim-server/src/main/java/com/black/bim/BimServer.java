@@ -35,9 +35,7 @@ public class BimServer extends ImBaseServer {
     /**
      * 该服务器的配置
     */
-    private static BimServerConfig config = BimConfigFactory.getConfig(BimServerConfig.class);
-
-    private static BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
+    private static BimServerConfig serverConfig = BimConfigFactory.getConfig(BimServerConfig.class);
 
     /**
      * 自定义流水线
@@ -112,7 +110,7 @@ public class BimServer extends ImBaseServer {
         //2 设置nio类型的channel
         b.channel(NioServerSocketChannel.class);
         //3 设置监听端口
-        b.localAddress(new InetSocketAddress(commonConfig.getPort()));
+        b.localAddress(new InetSocketAddress(serverConfig.getPort()));
         //4 设置通道选项
         b.option(ChannelOption.SO_KEEPALIVE, true);
         b.option(ChannelOption.ALLOCATOR,

@@ -3,7 +3,9 @@ package com.black.bim.client;
 import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.BimClientConfig;
 import com.black.bim.config.configPojo.BimCommonConfig;
+import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.handler.DefaultClientChannelInitializer;
+import com.black.bim.zk.BimLoadBalance;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
@@ -39,13 +41,6 @@ public class BimClient extends ImBaseClient {
     private ChannelInitializer<SocketChannel> channelInitializer = null;
 
     /**
-     * 客户端的配置
-     */
-    private BimClientConfig clientConfigure = BimConfigFactory.getConfig(BimClientConfig.class);
-
-    private BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
-
-    /**
      * 是否采用的默认的消息协议
     */
     private boolean isDefaultMsg = false;
@@ -69,13 +64,14 @@ public class BimClient extends ImBaseClient {
 
 
     private void initClient() throws Exception {
+        BimServerNodeInfo serverNodeInfo = BimLoadBalance.getServer();
         b = new Bootstrap();
         g = new NioEventLoopGroup();
         b.group(g);
         b.channel(NioSocketChannel.class);
         b.option(ChannelOption.SO_KEEPALIVE, true);
         b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-        b.remoteAddress(clientConfigure.getServerIp(), commonConfig.getPort());
+        b.remoteAddress(serverNodeInfo.getHost(), serverNodeInfo.getPort());
         // 通道初始化
         if (!isDefaultMsg) {
             // 如果是用户自定义协议、检查是否传入了该协议的处理方式

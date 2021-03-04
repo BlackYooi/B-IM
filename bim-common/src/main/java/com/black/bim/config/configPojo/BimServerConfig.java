@@ -9,4 +9,13 @@ import lombok.Data;
  */
 @Data
 public class BimServerConfig extends BimBaseConfig {
+    /**
+     * 服务器端口
+     */
+    protected Integer port;
+
+    /**
+     * 服务端地址
+    */
+    protected String ip;
 }

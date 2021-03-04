@@ -29,7 +29,6 @@ public class BimCommonHolder {
                 consumeIfValueNotNullOrThrow(instance::setMagicCode, parseShortOrNull(properties.getProperty("magicCode")));
                 consumeIfValueNotNullOrThrow(instance::setVersionNumber, parseShortOrNull(properties.getProperty("versionNumber")));
                 consumeIfValueNotNullOrThrow(instance::setHeartBeatInterval, parseIntOrNull(properties.getProperty("heartBeatInterval")));
-                consumeIfValueNotNullOrThrow(instance::setPort, parseIntOrNull(properties.getProperty("port")));
             } catch (IOException e) {
                 log.error(String.format("加载bimCommon配置文件失败【%s】", e.getMessage()));
                 e.printStackTrace();

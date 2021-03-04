@@ -11,9 +11,4 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 public class BimClientConfig extends BimBaseConfig {
-
-    /**
-     * 服务器ip
-    */
-    private String serverIp;
 }

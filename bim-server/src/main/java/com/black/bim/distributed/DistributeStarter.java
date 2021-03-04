@@ -2,6 +2,7 @@ package com.black.bim.distributed;
 
 import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.BimCommonConfig;
+import com.black.bim.config.configPojo.BimServerConfig;
 import com.black.bim.util.IOUtil;
 
 /**
@@ -12,9 +13,9 @@ import com.black.bim.util.IOUtil;
 public class DistributeStarter {
     public static void start() {
         // 读取配置
-        BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
+        BimServerConfig serverConfig = BimConfigFactory.getConfig(BimServerConfig.class);
         // 设置节点
-        BimWorker.getInstance().setBimNodeInfo(IOUtil.getHostAddress(), commonConfig.getPort());
+        BimWorker.getInstance().setBimNodeInfo(serverConfig.getIp(), serverConfig.getPort());
         // 初始化
         BimWorker.getInstance().init();
         WorkerRoute.getInstance().init();
