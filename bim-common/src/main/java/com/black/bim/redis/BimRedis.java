@@ -1,6 +1,5 @@
 package com.black.bim.redis;
 
-import com.black.bim.config.BimBaseConfig;
 import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.RedisConfig;
 import lombok.AccessLevel;
@@ -10,7 +9,7 @@ import lombok.Setter;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.util.function.Consumer;
+import static com.black.bim.util.FunctionUtil.consumeIfValueNotNull;
 
 /**
  * @author 85689
@@ -46,12 +45,6 @@ public class BimRedis {
         consumeIfValueNotNull(poolConfig::setBlockWhenExhausted, redisConfig.getBlockWhenExhausted());
         consumeIfValueNotNull(poolConfig::setTestWhileIdle, redisConfig.getTestWhileIdle());
         return poolConfig;
-    }
-
-    private <T> void consumeIfValueNotNull(Consumer<T> consumer, T value) {
-        if (null != value) {
-            consumer.accept(value);
-        }
     }
 
     private JedisPool createJedisPool(RedisConfig bimRedisConfig) {

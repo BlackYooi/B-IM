@@ -8,6 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Properties;
 
+import static com.black.bim.util.PackingTypeUtil.parseIntOrNull;
+import static com.black.bim.util.PackingTypeUtil.parseLongOrNull;
+import static com.black.bim.util.PackingTypeUtil.parseBooleanOrNull;
+
 /**
  * @description：
  * @author：8568
@@ -22,51 +26,30 @@ public class RedisHolder {
             instance = new RedisConfig();
             try {
                 Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_REDIS.getPropertiesName());
-                instance.setMaxTotal(parseInt(properties.getProperty("maxTotal")));
-                instance.setMaxIdle(parseInt(properties.getProperty("maxIdle")));
-                instance.setMaxWaitMillis(parseLong(properties.getProperty("maxWaitMillis")));
-                instance.setTestOnBorrow(parseBoolean(properties.getProperty("testOnBorrow")));
+                instance.setMaxTotal(parseIntOrNull(properties.getProperty("maxTotal")));
+                instance.setMaxIdle(parseIntOrNull(properties.getProperty("maxIdle")));
+                instance.setMaxWaitMillis(parseLongOrNull(properties.getProperty("maxWaitMillis")));
+                instance.setTestOnBorrow(parseBooleanOrNull(properties.getProperty("testOnBorrow")));
                 instance.setHost((String) properties.get("host"));
-                instance.setPort(parseInt(properties.getProperty("port")));
-                instance.setConnTimeout(parseInt(properties.getProperty("connTimeout")));
-                instance.setReadTimeout(parseInt(properties.getProperty("readTimeout")));
+                instance.setPort(parseIntOrNull(properties.getProperty("port")));
+                instance.setConnTimeout(parseIntOrNull(properties.getProperty("connTimeout")));
+                instance.setReadTimeout(parseIntOrNull(properties.getProperty("readTimeout")));
                 instance.setPassword(properties.getProperty("password"));
-                instance.setDatabase(parseInt(properties.getProperty("database")));
-                instance.setMinEvictableIdleTimeMillis(parseLong(properties.getProperty("minEvictableIdleTimeMillis")));
-                instance.setSoftMinEvictableIdleTimeMillis(parseLong(properties.getProperty("softMinEvictableIdleTimeMillis")));
-                instance.setTimeBetweenEvictionRunsMillis(parseLong(properties.getProperty("timeBetweenEvictionRunsMillis")));
-                instance.setNumTestsPerEvictionRun(parseInt(properties.getProperty("numTestsPerEvictionRun")));
-                instance.setBlockWhenExhausted(parseBoolean(properties.getProperty("blockWhenExhausted")));
-                instance.setTestWhileIdle(parseBoolean(properties.getProperty("testWhileIdle")));
+                instance.setDatabase(parseIntOrNull(properties.getProperty("database")));
+                instance.setMinEvictableIdleTimeMillis(parseLongOrNull(properties.getProperty("minEvictableIdleTimeMillis")));
+                instance.setSoftMinEvictableIdleTimeMillis(parseLongOrNull(properties.getProperty("softMinEvictableIdleTimeMillis")));
+                instance.setTimeBetweenEvictionRunsMillis(parseLongOrNull(properties.getProperty("timeBetweenEvictionRunsMillis")));
+                instance.setNumTestsPerEvictionRun(parseIntOrNull(properties.getProperty("numTestsPerEvictionRun")));
+                instance.setBlockWhenExhausted(parseBooleanOrNull(properties.getProperty("blockWhenExhausted")));
+                instance.setTestWhileIdle(parseBooleanOrNull(properties.getProperty("testWhileIdle")));
                 // 自定义配置
-                instance.setUserCacheKeepTime(parseInt(properties.getProperty("userCacheKeepTime")));
+                instance.setUserCacheKeepTime(parseIntOrNull(properties.getProperty("userCacheKeepTime")));
             } catch (IOException e) {
                 log.error(String.format("加载redis配置文件失败【%s】", e.getMessage()));
                 e.printStackTrace();
             }
         }
         return instance;
-    }
-
-    public static Integer parseInt(String value) {
-        if (null == value) {
-            return null;
-        }
-        return Integer.parseInt(value);
-    }
-
-    public static Long parseLong(String value) {
-        if (null == value) {
-            return null;
-        }
-        return Long.parseLong(value);
-    }
-
-    public static Boolean parseBoolean(String value) {
-        if (null == value) {
-            return null;
-        }
-        return Boolean.parseBoolean(value);
     }
 
 }
