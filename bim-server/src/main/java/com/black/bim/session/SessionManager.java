@@ -60,7 +60,15 @@ public class SessionManager {
         SessionCache sessionCache = new SessionCache(localSession.getSessionId(), localSession.getUser().getUid(), localNode);
         sessionCacheDao.save(sessionCache);
         // 增加用户的session 信息到用户缓存
-        userCacheDao.addSession(localSession.getUser().getUid(), sessionCache);
+        if (null == userCacheDao.get(localSession.getUser().getUid())) {
+            // 新增会话
+            UserCache userCache = new UserCache(localSession.getUser().getUid());
+            userCache.addSession(sessionCache);
+            userCacheDao.save(userCache);
+        } else {
+            // 添加会话
+            userCacheDao.addSession(localSession.getUser().getUid(), sessionCache);
+        }
         // 更新负载数
         BimWorker.getInstance().incBalance();
         // TODO？ 通知其它服务器？

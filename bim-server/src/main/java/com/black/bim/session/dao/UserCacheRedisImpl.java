@@ -45,7 +45,7 @@ public class UserCacheRedisImpl implements UserCacheDAO {
         if (null == s || s.isEmpty()) {
             return null;
         }
-        return JsonUtil.jsonStringToObject(s, UserCache.class);
+        return JsonUtil.GSON.fromJson(s, UserCache.class);
     }
 
     @Override
@@ -59,6 +59,7 @@ public class UserCacheRedisImpl implements UserCacheDAO {
         Jedis jedis = jedisPool.getResource();
         String key = addPrefix(userUid);
         jedis.set(key, value);
+        jedis.expire(key, redisConfig.getUserCacheKeepTime());
      }
 
     @Override

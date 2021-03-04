@@ -38,6 +38,7 @@ public class RedisHolder {
                 instance.setNumTestsPerEvictionRun(parseInt(properties.getProperty("numTestsPerEvictionRun")));
                 instance.setBlockWhenExhausted(parseBoolean(properties.getProperty("blockWhenExhausted")));
                 instance.setTestWhileIdle(parseBoolean(properties.getProperty("testWhileIdle")));
+                // 自定义配置
                 instance.setUserCacheKeepTime(parseInt(properties.getProperty("userCacheKeepTime")));
             } catch (IOException e) {
                 log.error(String.format("加载redis配置文件失败【%s】", e.getMessage()));
