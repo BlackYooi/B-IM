@@ -24,7 +24,7 @@ import static com.black.bim.util.NotEmptyUtil.notEmptyOrThrow;
  */
 @Slf4j
 @NoArgsConstructor
-public class SimClient extends ImBaseClient {
+public class BimClient extends ImBaseClient {
 
     @Getter
     @Setter
@@ -53,12 +53,12 @@ public class SimClient extends ImBaseClient {
     /**
      * 创建一个默认消息协议的客户端
     */
-    public static SimClient defaultClient () {
-        SimClient client = new SimClient(true);
+    public static BimClient defaultClient () {
+        BimClient client = new BimClient(true);
         return client;
     }
 
-    public SimClient(Boolean isDefaultMsg) {
+    public BimClient(Boolean isDefaultMsg) {
         this.isDefaultMsg = isDefaultMsg;
         try {
             initClient();
@@ -88,7 +88,7 @@ public class SimClient extends ImBaseClient {
     }
 
     @Override
-    protected boolean connectToServer() {
+    public boolean connectToServer() {
         log.info("开始连接到服务器");
         try {
             ChannelFuture connect = b.connect().sync();
