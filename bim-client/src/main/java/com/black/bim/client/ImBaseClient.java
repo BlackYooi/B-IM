@@ -63,6 +63,7 @@ public abstract class ImBaseClient implements AutoCloseable {
                     return true;
                 }
                 Try.run(() -> TimeUnit.SECONDS.sleep(1));
+                i ++;
             } while (i < 5);
         } else {
             return false;
