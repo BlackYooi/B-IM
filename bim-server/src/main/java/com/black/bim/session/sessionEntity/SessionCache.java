@@ -39,16 +39,7 @@ public class SessionCache implements Serializable {
     public SessionCache(String sessionId, String userUid, BimServerNodeInfo imNode) {
         this.sessionId = sessionId;
         this.userUid = userUid;
-        this.imNode = newNodeInfoFromInfo(imNode);
-    }
-
-    private BimServerNodeInfo newNodeInfoFromInfo(BimServerNodeInfo nodeInfo) {
-        BimServerNodeInfo n = new BimServerNodeInfo();
-        n.setBalance(null);
-        n.setNodeId(nodeInfo.getNodeId());
-        n.setHost(nodeInfo.getHost());
-        n.setPort(nodeInfo.getPort());
-        return n;
+        this.imNode = BimServerNodeInfo.newNodeInfoFromInfoWithoutBalance(imNode);
     }
 
 }

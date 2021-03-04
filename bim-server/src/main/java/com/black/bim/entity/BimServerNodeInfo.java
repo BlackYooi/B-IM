@@ -96,4 +96,13 @@ public class BimServerNodeInfo implements Serializable {
             throw new RuntimeException("无法从byte[]恢复成BimServerNodeInfo");
         }
     }
+
+    public static BimServerNodeInfo newNodeInfoFromInfoWithoutBalance(BimServerNodeInfo nodeInfo) {
+        BimServerNodeInfo n = new BimServerNodeInfo();
+        n.setBalance(null);
+        n.setNodeId(nodeInfo.getNodeId());
+        n.setHost(nodeInfo.getHost());
+        n.setPort(nodeInfo.getPort());
+        return n;
+    }
 }

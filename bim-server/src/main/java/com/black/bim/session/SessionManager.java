@@ -57,7 +57,9 @@ public class SessionManager {
         sessionMap.put(localSession.getSessionId(), localSession);
         // 保存到redis
         BimServerNodeInfo localNode = BimWorker.getInstance().getLocalNode();
-        SessionCache sessionCache = new SessionCache(localSession.getSessionId(), localSession.getUser().getUid(), localNode);
+        SessionCache sessionCache = new SessionCache(localSession.getSessionId(),
+                localSession.getUser().getUid(),
+                BimServerNodeInfo.newNodeInfoFromInfoWithoutBalance(localNode));
         sessionCacheDao.save(sessionCache);
         // 增加用户的session 信息到用户缓存
         if (null == userCacheDao.get(localSession.getUser().getUid())) {
