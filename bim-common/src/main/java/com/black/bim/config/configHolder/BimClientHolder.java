@@ -2,6 +2,7 @@ package com.black.bim.config.configHolder;
 
 import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.BimClientConfig;
+import com.black.bim.exception.CanNotLoadPropertiesException;
 import com.black.bim.util.IOUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,12 +21,7 @@ public class BimClientHolder {
     public synchronized static BimClientConfig getInstance() {
         if (null == instance) {
             instance = new BimClientConfig();
-            try {
-                Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_CLIENT.getPropertiesName());
-            } catch (IOException e) {
-                log.error(String.format("加载binClient配置文件失败【%s】", e.getMessage()));
-                e.printStackTrace();
-            }
+            Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_CLIENT.getPropertiesName());
         }
         return instance;
     }

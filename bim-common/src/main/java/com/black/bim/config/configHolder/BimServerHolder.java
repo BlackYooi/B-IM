@@ -23,14 +23,9 @@ public class BimServerHolder {
     public static BimServerConfig getInstance() {
         if (null == instance) {
             instance = new BimServerConfig();
-            try {
-                Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_SERVER.getPropertiesName());
-                consumeIfValueNotNullOrThrow(instance::setPort, parseIntOrNull(properties.getProperty("port")));
-                consumeIfValueNotNullOrThrow(instance::setIp, properties.getProperty("ip"));
-            } catch (IOException e) {
-                log.error(String.format("加载binServer配置文件失败【%s】", e.getMessage()));
-                e.printStackTrace();
-            }
+            Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_SERVER.getPropertiesName());
+            consumeIfValueNotNullOrThrow(instance::setPort, parseIntOrNull(properties.getProperty("port")));
+            consumeIfValueNotNullOrThrow(instance::setIp, properties.getProperty("ip"));
         }
         return instance;
     }

@@ -20,7 +20,6 @@ public class DefaultMsgBuilder {
     /**
      * 用户配置
      */
-    private static BimClientConfig clientConfigure = BimConfigFactory.getConfig(BimClientConfig.class);
     private static BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
 
     public static DefaultMessage buildHearBeatMsg(BimClientSession session) {

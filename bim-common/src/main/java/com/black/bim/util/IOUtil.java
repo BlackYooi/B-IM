@@ -1,5 +1,6 @@
 package com.black.bim.util;
 
+import com.black.bim.exception.CanNotLoadPropertiesException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -17,12 +18,12 @@ public class IOUtil {
     /**
      * 读取配置文件
     */
-    public static Properties getProperties(String name) throws IOException {
+    public static Properties getProperties(String name) {
         Properties properties = new Properties();
         try (InputStream resourceAsStream = IOUtil.class.getClassLoader().getResourceAsStream(name)) {
             properties.load(resourceAsStream);
         } catch (Exception e) {
-            throw e;
+            throw new CanNotLoadPropertiesException(name);
         }
         return properties;
     }

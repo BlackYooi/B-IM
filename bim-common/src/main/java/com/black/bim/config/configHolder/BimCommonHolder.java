@@ -24,15 +24,10 @@ public class BimCommonHolder {
     public synchronized static BimCommonConfig getInstance() {
         if (null == instance) {
             instance = new BimCommonConfig();
-            try {
-                Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_COMMON.getPropertiesName());
-                consumeIfValueNotNullOrThrow(instance::setMagicCode, parseShortOrNull(properties.getProperty("magicCode")));
-                consumeIfValueNotNullOrThrow(instance::setVersionNumber, parseShortOrNull(properties.getProperty("versionNumber")));
-                consumeIfValueNotNullOrThrow(instance::setHeartBeatInterval, parseIntOrNull(properties.getProperty("heartBeatInterval")));
-            } catch (IOException e) {
-                log.error(String.format("加载bimCommon配置文件失败【%s】", e.getMessage()));
-                e.printStackTrace();
-            }
+            Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_COMMON.getPropertiesName());
+            consumeIfValueNotNullOrThrow(instance::setMagicCode, parseShortOrNull(properties.getProperty("magicCode")));
+            consumeIfValueNotNullOrThrow(instance::setVersionNumber, parseShortOrNull(properties.getProperty("versionNumber")));
+            consumeIfValueNotNullOrThrow(instance::setHeartBeatInterval, parseIntOrNull(properties.getProperty("heartBeatInterval")));
         }
         return instance;
     }
