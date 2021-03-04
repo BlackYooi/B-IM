@@ -12,7 +12,7 @@
     <modules>
         <module>bim-common</module>
         <module>bim-server</module>
-        <module>example</module>
+        <module>bim-example</module>
         <module>bim-client</module>
     </modules>
 
