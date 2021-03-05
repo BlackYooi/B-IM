@@ -3,8 +3,8 @@ package com.black.bim.session.sessionEntity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,7 +20,7 @@ public class UserCache implements Serializable {
     /**
      * 可能会多端登录、所以一个用户对应多个session
     */
-    private Map<String, SessionCache> map = new LinkedHashMap<>(10);
+    private List<SessionCacheEntity> sessions = new ArrayList<>(10);
 
     public UserCache(String userUid) {
         this.userUid = userUid;
@@ -29,17 +29,20 @@ public class UserCache implements Serializable {
     /**
      * 为用户增加sessionCache
     */
-    public void addSession(SessionCache session) {
+    public void addSession(SessionCacheEntity session) {
 
-        map.put(session.getSessionId(), session);
+        sessions.add(session);
     }
 
     /**
      * 为用户移除session
     */
-    public void removeSession(String sessionId)
-    {
-        map.remove(sessionId);
+    public void removeSession(String sessionId) {
+        for (SessionCacheEntity sessionCacheEntity : sessions) {
+            if (sessionCacheEntity.getSessionId().equals(sessionId)) {
+                sessions.remove(sessionCacheEntity);
+            }
+        }
     }
 
 

@@ -11,14 +11,9 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-public class SessionCache implements Serializable {
+public class SessionCacheEntity implements Serializable {
 
     private static final long serialVersionUID = -403010884211394856L;
-
-    /**
-     * 用户的唯一标识
-    */
-    private String userUid;
 
     /**
      * session id
@@ -30,15 +25,13 @@ public class SessionCache implements Serializable {
     */
     private BimServerNodeInfo imNode;
 
-    public SessionCache() {
-        userUid = "";
+    public SessionCacheEntity() {
         sessionId = "";
         imNode = new BimServerNodeInfo("unKnown", 0);
     }
 
-    public SessionCache(String sessionId, String userUid, BimServerNodeInfo imNode) {
+    public SessionCacheEntity(String sessionId, BimServerNodeInfo imNode) {
         this.sessionId = sessionId;
-        this.userUid = userUid;
         this.imNode = BimServerNodeInfo.newNodeInfoFromInfoWithoutBalance(imNode);
     }
 

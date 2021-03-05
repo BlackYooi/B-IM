@@ -52,6 +52,9 @@ public class BimServer extends ImBaseServer {
         this.isDefaultMsg = isDefaultMsg;
     }
 
+    NioEventLoopGroup boss = null;
+    NioEventLoopGroup worker = null;
+
     /**
      * 一台机器只能开一个服务器、所以设置成单例。
      * 多开了反而会影响性能：
@@ -70,9 +73,27 @@ public class BimServer extends ImBaseServer {
 
     @Override
     public void run() throws Exception {
+        tryRun();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return isRunSuccess;
+    }
+
+    @Override
+    public void close() {
+        if (false == boss.isShutdown()) {
+            boss.shutdownGracefully().syncUninterruptibly();
+        }
+        if (false == worker.isShutdown()) {
+            worker.shutdownGracefully().syncUninterruptibly();
+        }
+        isRunSuccess = false;
+    }
+
+    private void tryRun() throws Exception{
         ServerBootstrap b = new ServerBootstrap();
-        NioEventLoopGroup boss = null;
-        NioEventLoopGroup worker = null;
         try {
             boss = new NioEventLoopGroup(1);
             worker = new NioEventLoopGroup();
@@ -91,16 +112,14 @@ public class BimServer extends ImBaseServer {
                 isRunSuccess = true;
             }
             DistributeStarter.start();
-            // 一直阻塞、直到发出关闭命令、本服务器不考虑关闭、所以会一直阻塞
-            ChannelFuture channelFuture = bindF.channel().closeFuture();
-            channelFuture.sync();  
-        } finally {
+        } catch (Exception e){
             if (false == boss.isShutdown()) {
                 boss.shutdownGracefully().syncUninterruptibly();
             }
             if (false == worker.isShutdown()) {
                 worker.shutdownGracefully().syncUninterruptibly();
             }
+            throw e;
         }
     }
 
@@ -115,10 +134,5 @@ public class BimServer extends ImBaseServer {
         b.option(ChannelOption.SO_KEEPALIVE, true);
         b.option(ChannelOption.ALLOCATOR,
                 PooledByteBufAllocator.DEFAULT);
-    }
-
-    @Override
-    public boolean isRunning() {
-        return isRunSuccess;
     }
 }

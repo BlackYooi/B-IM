@@ -1,9 +1,10 @@
-package com.black.bim.client;
+package com.black.bim.im;
 
 
+import com.black.bim.config.BimConfigFactory;
+import com.black.bim.config.configPojo.BimCommonConfig;
 import com.black.bim.entity.UserInfo;
-import com.black.bim.im.ImSession;
-import com.black.bim.potobuf.DefaultMsgBuilder;
+import com.google.gson.Gson;
 import io.netty.channel.ChannelFutureListener;
 import io.vavr.control.Try;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.black.bim.im.protobuf.DefaultMsgBuilder.buildCommon;
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
 
 /**
@@ -54,7 +56,7 @@ public abstract class ImBaseClient implements AutoCloseable {
     private boolean doLogin(UserInfo u) {
         boolean loginSuccess = false;
         session.setUser(u);
-        DefaultMessage loginMsg = DefaultMsgBuilder.ofLoginMsg(session);
+        DefaultMessage loginMsg = ofLoginMsg(session);
         if (sendMsgSync(loginMsg)) {
             int i = 0;
             // 等待收到的登录响应包改变session状态
@@ -77,7 +79,7 @@ public abstract class ImBaseClient implements AutoCloseable {
      * @param message
      * @return:
     */
-    abstract void sendMsg(DefaultMessage message, ChannelFutureListener f);
+    public abstract void sendMsg(DefaultMessage message, ChannelFutureListener f);
 
     /**
      * Description: 同步方式发送消息给服务器
@@ -85,7 +87,7 @@ public abstract class ImBaseClient implements AutoCloseable {
      * @param message
      * @return: java.lang.Boolean
     */
-    abstract boolean sendMsgSync(DefaultMessage message);
+    public abstract boolean sendMsgSync(DefaultMessage message);
 
     /**
      * Description: 关闭客户端
@@ -93,10 +95,22 @@ public abstract class ImBaseClient implements AutoCloseable {
      * @param
      * @return: void
     */
-    abstract void closeClient() throws Exception;
+    protected abstract void closeClient() throws Exception;
 
     @Override
     public void close() throws Exception {
         closeClient();
+    }
+
+    private DefaultMessage ofLoginMsg(ImSession session) {
+        BimCommonConfig config = BimConfigFactory.getConfig(BimCommonConfig.class);
+        DefaultMessage message = buildCommon(-1, HeadType.LOGIN_REQUEST, session);
+        UserInfo u = session.getUser();
+        LoginRequest black = LoginRequest.newBuilder()
+                .setAppVersion(String.valueOf(config.getVersionNumber()))
+                .setUid(u.getUid())
+                .setJson(new Gson().toJson(u))
+                .build();
+        return message.toBuilder().setLoginRequest(black).build();
     }
 }

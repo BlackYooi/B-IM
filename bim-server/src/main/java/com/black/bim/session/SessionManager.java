@@ -4,12 +4,10 @@ import com.black.bim.distributed.BimWorker;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.im.ImSession;
 import com.black.bim.session.sessionImpl.BimServerLocalSession;
-import com.black.bim.session.sessionImpl.BimServerRemoteSession;
-import com.black.bim.session.dao.SessionCacheDAO;
-import com.black.bim.session.dao.SessionCacheRedisImpl;
+import com.black.bim.session.sessionImpl.BimServerNodeSession;
 import com.black.bim.session.dao.UserCacheDAO;
 import com.black.bim.session.dao.UserCacheRedisImpl;
-import com.black.bim.session.sessionEntity.SessionCache;
+import com.black.bim.session.sessionEntity.SessionCacheEntity;
 import com.black.bim.session.sessionEntity.UserCache;
 import com.black.bim.redis.BimRedis;
 import io.netty.channel.Channel;
@@ -18,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,14 +28,12 @@ public class SessionManager {
 
     private UserCacheDAO userCacheDao;
 
-    private SessionCacheDAO sessionCacheDao;
-
     private static SessionManager instance;
 
     /**
-     * 会话清单: 含本地会话、自己的远程会话
+     * 本地会话清单: 含本地会话、自己的远程会话
     */
-    private ConcurrentHashMap<String, ImSession> sessionMap = new ConcurrentHashMap();
+    private ConcurrentHashMap<String, BimServerLocalSession> sessionMap = new ConcurrentHashMap();
 
     private SessionManager() {}
 
@@ -47,7 +42,7 @@ public class SessionManager {
         if (null == instance) {
             instance = new SessionManager();
             instance.userCacheDao = new UserCacheRedisImpl(bimRedis);
-            instance.sessionCacheDao = new SessionCacheRedisImpl(bimRedis);
+            //instance.sessionCacheDao = new SessionCacheRedisImpl(bimRedis);
         }
         return instance;
     }
@@ -57,10 +52,10 @@ public class SessionManager {
         sessionMap.put(localSession.getSessionId(), localSession);
         // 保存到redis
         BimServerNodeInfo localNode = BimWorker.getInstance().getLocalNode();
-        SessionCache sessionCache = new SessionCache(localSession.getSessionId(),
-                localSession.getUser().getUid(),
+        SessionCacheEntity sessionCache = new SessionCacheEntity(
+                localSession.getSessionId(),
                 BimServerNodeInfo.newNodeInfoFromInfoWithoutBalance(localNode));
-        sessionCacheDao.save(sessionCache);
+        //sessionCacheDao.save(sessionCache);
         // 增加用户的session 信息到用户缓存
         if (null == userCacheDao.get(localSession.getUser().getUid())) {
             // 新增会话
@@ -82,38 +77,30 @@ public class SessionManager {
             log.info("用户：{} 下线了? 没有在缓存中找到记录 ", userUid);
             return null;
         }
-        Map<String, SessionCache> allSession = userCache.getMap();
+        List<SessionCacheEntity> allSession = userCache.getSessions();
         if (null == allSession || allSession.size() == 0) {
             log.info("用户：{} 下线了? 没有在缓存中找到记录 ", userUid);
         }
         List<ImSession> sessions = new LinkedList<>();
-        allSession.values().stream().forEach( sessionCache -> {
+        allSession.stream().forEach( sessionCache -> {
             String sessionId = sessionCache.getSessionId();
             // 取得本地session
             ImSession imSession = sessionMap.get(sessionId);
+            // 如果无本地session、创建节点委托型session
             if (imSession == null) {
-                sessionMap.put(sessionId, imSession);
-                imSession = new BimServerRemoteSession(sessionCache);
+                imSession = new BimServerNodeSession(sessionCache);
             }
             sessions.add(imSession);
         });
         return sessions;
     }
 
-    public Optional<BimServerLocalSession> getSessionById(String sessionId) {
-        try {
-            ImSession imSession = sessionMap.get(sessionId);
-            if (null != imSession && imSession instanceof BimServerLocalSession) {
-                BimServerLocalSession serverLocalSession = (BimServerLocalSession) imSession;
-                return Optional.of(serverLocalSession);
-            }
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-        return Optional.empty();
+    public Optional<BimServerLocalSession> getLocalSessionById(String sessionId) {
+        BimServerLocalSession bimServerLocalSession = sessionMap.get(sessionId);
+        return Optional.ofNullable(bimServerLocalSession);
     }
 
-    public Optional<BimServerLocalSession> getSession(ChannelHandlerContext ctx) {
+    public Optional<BimServerLocalSession> getChannelSession(ChannelHandlerContext ctx) {
         Channel channel = ctx.channel();
         BimServerLocalSession serverLocalSession = channel.attr(BimServerLocalSession.SESSION_KEY).get();
         return Optional.ofNullable(serverLocalSession);
@@ -142,7 +129,7 @@ public class SessionManager {
         // 删除会话
         String sessionId = session.getSessionId();
         sessionMap.remove(sessionId);
-        sessionCacheDao.remove(sessionId);
+        //sessionCacheDao.remove(sessionId);
         userCacheDao.removeSession(session.getUser().getUid(), sessionId);
         // 减小节点负载
         BimWorker.getInstance().desBalance();

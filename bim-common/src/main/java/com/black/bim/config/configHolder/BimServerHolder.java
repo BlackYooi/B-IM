@@ -26,6 +26,7 @@ public class BimServerHolder {
             Properties properties = IOUtil.getProperties(BimConfigFactory.BimConfigTypes.BIM_SERVER.getPropertiesName());
             consumeIfValueNotNullOrThrow(instance::setPort, parseIntOrNull(properties.getProperty("port")));
             consumeIfValueNotNullOrThrow(instance::setIp, properties.getProperty("ip"));
+            consumeIfValueNotNullOrThrow(instance::setNodeToken, properties.getProperty("nodeToken"));
         }
         return instance;
     }

@@ -344,12 +344,12 @@ public final class DefaultProtoMsg {
 
     /**
      * <pre>
-     *通知消息枚举
+     *消息类型枚举
      * </pre>
      *
-     * Protobuf enum {@code com.black.bim.im.protobuf.ProtoMsg.NotifyType}
+     * Protobuf enum {@code com.black.bim.im.protobuf.ProtoMsg.MsgType}
      */
-    public enum NotifyType
+    public enum MsgType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <pre>
@@ -375,6 +375,22 @@ public final class DefaultProtoMsg {
        * <code>CONNECT_FINISHED = 2;</code>
        */
       CONNECT_FINISHED(2),
+      /**
+       * <pre>
+       * 聊天消息
+       * </pre>
+       *
+       * <code>CHAT_MSG = 3;</code>
+       */
+      CHAT_MSG(3),
+      /**
+       * <pre>
+       * 聊天消息节点委托
+       * </pre>
+       *
+       * <code>CHAT_MSG_COMMISSION = 4;</code>
+       */
+      CHAT_MSG_COMMISSION(4),
       UNRECOGNIZED(-1),
       ;
 
@@ -402,6 +418,22 @@ public final class DefaultProtoMsg {
        * <code>CONNECT_FINISHED = 2;</code>
        */
       public static final int CONNECT_FINISHED_VALUE = 2;
+      /**
+       * <pre>
+       * 聊天消息
+       * </pre>
+       *
+       * <code>CHAT_MSG = 3;</code>
+       */
+      public static final int CHAT_MSG_VALUE = 3;
+      /**
+       * <pre>
+       * 聊天消息节点委托
+       * </pre>
+       *
+       * <code>CHAT_MSG_COMMISSION = 4;</code>
+       */
+      public static final int CHAT_MSG_COMMISSION_VALUE = 4;
 
 
       public final int getNumber() {
@@ -418,7 +450,7 @@ public final class DefaultProtoMsg {
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static NotifyType valueOf(int value) {
+      public static MsgType valueOf(int value) {
         return forNumber(value);
       }
 
@@ -426,24 +458,26 @@ public final class DefaultProtoMsg {
        * @param value The numeric wire value of the corresponding enum entry.
        * @return The enum associated with the given numeric wire value.
        */
-      public static NotifyType forNumber(int value) {
+      public static MsgType forNumber(int value) {
         switch (value) {
           case 0: return SESSION_ON;
           case 1: return SESSION_OFF;
           case 2: return CONNECT_FINISHED;
+          case 3: return CHAT_MSG;
+          case 4: return CHAT_MSG_COMMISSION;
           default: return null;
         }
       }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<NotifyType>
+      public static com.google.protobuf.Internal.EnumLiteMap<MsgType>
           internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          NotifyType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<NotifyType>() {
-              public NotifyType findValueByNumber(int number) {
-                return NotifyType.forNumber(number);
+          MsgType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<MsgType>() {
+              public MsgType findValueByNumber(int number) {
+                return MsgType.forNumber(number);
               }
             };
 
@@ -464,9 +498,9 @@ public final class DefaultProtoMsg {
         return com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.getDescriptor().getEnumTypes().get(1);
       }
 
-      private static final NotifyType[] VALUES = values();
+      private static final MsgType[] VALUES = values();
 
-      public static NotifyType valueOf(
+      public static MsgType valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
@@ -480,11 +514,11 @@ public final class DefaultProtoMsg {
 
       private final int value;
 
-      private NotifyType(int value) {
+      private MsgType(int value) {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:com.black.bim.im.protobuf.ProtoMsg.NotifyType)
+      // @@protoc_insertion_point(enum_scope:com.black.bim.im.protobuf.ProtoMsg.MsgType)
     }
 
     public interface LoginRequestOrBuilder extends
@@ -2756,7 +2790,7 @@ public final class DefaultProtoMsg {
 
       /**
        * <pre>
-       * 发送对象
+       * 发送对象的uid
        * </pre>
        *
        * <code>string to = 3;</code>
@@ -2765,7 +2799,7 @@ public final class DefaultProtoMsg {
       java.lang.String getTo();
       /**
        * <pre>
-       * 发送对象
+       * 发送对象的uid
        * </pre>
        *
        * <code>string to = 3;</code>
@@ -2789,10 +2823,19 @@ public final class DefaultProtoMsg {
        * 消息类型
        * </pre>
        *
-       * <code>uint32 msg_type = 5;</code>
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
+       * @return The enum numeric value on the wire for msgType.
+       */
+      int getMsgTypeValue();
+      /**
+       * <pre>
+       * 消息类型
+       * </pre>
+       *
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
        * @return The msgType.
        */
-      int getMsgType();
+      com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType getMsgType();
 
       /**
        * <pre>
@@ -2867,12 +2910,40 @@ public final class DefaultProtoMsg {
           getFromNickBytes();
 
       /**
-       * <code>string json = 11;</code>
+       * <pre>
+       * 接收者的会话id
+       * </pre>
+       *
+       * <code>string acceptSessionId = 11;</code>
+       * @return The acceptSessionId.
+       */
+      java.lang.String getAcceptSessionId();
+      /**
+       * <pre>
+       * 接收者的会话id
+       * </pre>
+       *
+       * <code>string acceptSessionId = 11;</code>
+       * @return The bytes for acceptSessionId.
+       */
+      com.google.protobuf.ByteString
+          getAcceptSessionIdBytes();
+
+      /**
+       * <pre>
+       * 附加信息
+       * </pre>
+       *
+       * <code>string json = 12;</code>
        * @return The json.
        */
       java.lang.String getJson();
       /**
-       * <code>string json = 11;</code>
+       * <pre>
+       * 附加信息
+       * </pre>
+       *
+       * <code>string json = 12;</code>
        * @return The bytes for json.
        */
       com.google.protobuf.ByteString
@@ -2897,10 +2968,12 @@ public final class DefaultProtoMsg {
       private MessageRequest() {
         from_ = "";
         to_ = "";
+        msgType_ = 0;
         content_ = "";
         url_ = "";
         property_ = "";
         fromNick_ = "";
+        acceptSessionId_ = "";
         json_ = "";
       }
 
@@ -2957,8 +3030,9 @@ public final class DefaultProtoMsg {
                 break;
               }
               case 40: {
+                int rawValue = input.readEnum();
 
-                msgType_ = input.readUInt32();
+                msgType_ = rawValue;
                 break;
               }
               case 50: {
@@ -2986,6 +3060,12 @@ public final class DefaultProtoMsg {
                 break;
               }
               case 90: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                acceptSessionId_ = s;
+                break;
+              }
+              case 98: {
                 java.lang.String s = input.readStringRequireUtf8();
 
                 json_ = s;
@@ -3088,7 +3168,7 @@ public final class DefaultProtoMsg {
       private volatile java.lang.Object to_;
       /**
        * <pre>
-       * 发送对象
+       * 发送对象的uid
        * </pre>
        *
        * <code>string to = 3;</code>
@@ -3109,7 +3189,7 @@ public final class DefaultProtoMsg {
       }
       /**
        * <pre>
-       * 发送对象
+       * 发送对象的uid
        * </pre>
        *
        * <code>string to = 3;</code>
@@ -3152,12 +3232,24 @@ public final class DefaultProtoMsg {
        * 消息类型
        * </pre>
        *
-       * <code>uint32 msg_type = 5;</code>
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
+       * @return The enum numeric value on the wire for msgType.
+       */
+      @java.lang.Override public int getMsgTypeValue() {
+        return msgType_;
+      }
+      /**
+       * <pre>
+       * 消息类型
+       * </pre>
+       *
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
        * @return The msgType.
        */
-      @java.lang.Override
-      public int getMsgType() {
-        return msgType_;
+      @java.lang.Override public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType getMsgType() {
+        @SuppressWarnings("deprecation")
+        com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType result = com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.valueOf(msgType_);
+        return result == null ? com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.UNRECOGNIZED : result;
       }
 
       public static final int CONTENT_FIELD_NUMBER = 6;
@@ -3336,10 +3428,60 @@ public final class DefaultProtoMsg {
         }
       }
 
-      public static final int JSON_FIELD_NUMBER = 11;
+      public static final int ACCEPTSESSIONID_FIELD_NUMBER = 11;
+      private volatile java.lang.Object acceptSessionId_;
+      /**
+       * <pre>
+       * 接收者的会话id
+       * </pre>
+       *
+       * <code>string acceptSessionId = 11;</code>
+       * @return The acceptSessionId.
+       */
+      @java.lang.Override
+      public java.lang.String getAcceptSessionId() {
+        java.lang.Object ref = acceptSessionId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          acceptSessionId_ = s;
+          return s;
+        }
+      }
+      /**
+       * <pre>
+       * 接收者的会话id
+       * </pre>
+       *
+       * <code>string acceptSessionId = 11;</code>
+       * @return The bytes for acceptSessionId.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getAcceptSessionIdBytes() {
+        java.lang.Object ref = acceptSessionId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          acceptSessionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int JSON_FIELD_NUMBER = 12;
       private volatile java.lang.Object json_;
       /**
-       * <code>string json = 11;</code>
+       * <pre>
+       * 附加信息
+       * </pre>
+       *
+       * <code>string json = 12;</code>
        * @return The json.
        */
       @java.lang.Override
@@ -3356,7 +3498,11 @@ public final class DefaultProtoMsg {
         }
       }
       /**
-       * <code>string json = 11;</code>
+       * <pre>
+       * 附加信息
+       * </pre>
+       *
+       * <code>string json = 12;</code>
        * @return The bytes for json.
        */
       @java.lang.Override
@@ -3400,8 +3546,8 @@ public final class DefaultProtoMsg {
         if (time_ != 0L) {
           output.writeUInt64(4, time_);
         }
-        if (msgType_ != 0) {
-          output.writeUInt32(5, msgType_);
+        if (msgType_ != com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.SESSION_ON.getNumber()) {
+          output.writeEnum(5, msgType_);
         }
         if (!getContentBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 6, content_);
@@ -3415,8 +3561,11 @@ public final class DefaultProtoMsg {
         if (!getFromNickBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 10, fromNick_);
         }
+        if (!getAcceptSessionIdBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 11, acceptSessionId_);
+        }
         if (!getJsonBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 11, json_);
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 12, json_);
         }
         unknownFields.writeTo(output);
       }
@@ -3441,9 +3590,9 @@ public final class DefaultProtoMsg {
           size += com.google.protobuf.CodedOutputStream
             .computeUInt64Size(4, time_);
         }
-        if (msgType_ != 0) {
+        if (msgType_ != com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.SESSION_ON.getNumber()) {
           size += com.google.protobuf.CodedOutputStream
-            .computeUInt32Size(5, msgType_);
+            .computeEnumSize(5, msgType_);
         }
         if (!getContentBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, content_);
@@ -3457,8 +3606,11 @@ public final class DefaultProtoMsg {
         if (!getFromNickBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, fromNick_);
         }
+        if (!getAcceptSessionIdBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, acceptSessionId_);
+        }
         if (!getJsonBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, json_);
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, json_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -3483,8 +3635,7 @@ public final class DefaultProtoMsg {
             .equals(other.getTo())) return false;
         if (getTime()
             != other.getTime()) return false;
-        if (getMsgType()
-            != other.getMsgType()) return false;
+        if (msgType_ != other.msgType_) return false;
         if (!getContent()
             .equals(other.getContent())) return false;
         if (!getUrl()
@@ -3493,6 +3644,8 @@ public final class DefaultProtoMsg {
             .equals(other.getProperty())) return false;
         if (!getFromNick()
             .equals(other.getFromNick())) return false;
+        if (!getAcceptSessionId()
+            .equals(other.getAcceptSessionId())) return false;
         if (!getJson()
             .equals(other.getJson())) return false;
         if (!unknownFields.equals(other.unknownFields)) return false;
@@ -3517,7 +3670,7 @@ public final class DefaultProtoMsg {
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
             getTime());
         hash = (37 * hash) + MSG_TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + getMsgType();
+        hash = (53 * hash) + msgType_;
         hash = (37 * hash) + CONTENT_FIELD_NUMBER;
         hash = (53 * hash) + getContent().hashCode();
         hash = (37 * hash) + URL_FIELD_NUMBER;
@@ -3526,6 +3679,8 @@ public final class DefaultProtoMsg {
         hash = (53 * hash) + getProperty().hashCode();
         hash = (37 * hash) + FROM_NICK_FIELD_NUMBER;
         hash = (53 * hash) + getFromNick().hashCode();
+        hash = (37 * hash) + ACCEPTSESSIONID_FIELD_NUMBER;
+        hash = (53 * hash) + getAcceptSessionId().hashCode();
         hash = (37 * hash) + JSON_FIELD_NUMBER;
         hash = (53 * hash) + getJson().hashCode();
         hash = (29 * hash) + unknownFields.hashCode();
@@ -3683,6 +3838,8 @@ public final class DefaultProtoMsg {
 
           fromNick_ = "";
 
+          acceptSessionId_ = "";
+
           json_ = "";
 
           return this;
@@ -3720,6 +3877,7 @@ public final class DefaultProtoMsg {
           result.url_ = url_;
           result.property_ = property_;
           result.fromNick_ = fromNick_;
+          result.acceptSessionId_ = acceptSessionId_;
           result.json_ = json_;
           onBuilt();
           return result;
@@ -3783,8 +3941,8 @@ public final class DefaultProtoMsg {
           if (other.getTime() != 0L) {
             setTime(other.getTime());
           }
-          if (other.getMsgType() != 0) {
-            setMsgType(other.getMsgType());
+          if (other.msgType_ != 0) {
+            setMsgTypeValue(other.getMsgTypeValue());
           }
           if (!other.getContent().isEmpty()) {
             content_ = other.content_;
@@ -3800,6 +3958,10 @@ public final class DefaultProtoMsg {
           }
           if (!other.getFromNick().isEmpty()) {
             fromNick_ = other.fromNick_;
+            onChanged();
+          }
+          if (!other.getAcceptSessionId().isEmpty()) {
+            acceptSessionId_ = other.acceptSessionId_;
             onChanged();
           }
           if (!other.getJson().isEmpty()) {
@@ -3977,7 +4139,7 @@ public final class DefaultProtoMsg {
         private java.lang.Object to_ = "";
         /**
          * <pre>
-         * 发送对象
+         * 发送对象的uid
          * </pre>
          *
          * <code>string to = 3;</code>
@@ -3997,7 +4159,7 @@ public final class DefaultProtoMsg {
         }
         /**
          * <pre>
-         * 发送对象
+         * 发送对象的uid
          * </pre>
          *
          * <code>string to = 3;</code>
@@ -4018,7 +4180,7 @@ public final class DefaultProtoMsg {
         }
         /**
          * <pre>
-         * 发送对象
+         * 发送对象的uid
          * </pre>
          *
          * <code>string to = 3;</code>
@@ -4037,7 +4199,7 @@ public final class DefaultProtoMsg {
         }
         /**
          * <pre>
-         * 发送对象
+         * 发送对象的uid
          * </pre>
          *
          * <code>string to = 3;</code>
@@ -4051,7 +4213,7 @@ public final class DefaultProtoMsg {
         }
         /**
          * <pre>
-         * 发送对象
+         * 发送对象的uid
          * </pre>
          *
          * <code>string to = 3;</code>
@@ -4113,17 +4275,16 @@ public final class DefaultProtoMsg {
           return this;
         }
 
-        private int msgType_ ;
+        private int msgType_ = 0;
         /**
          * <pre>
          * 消息类型
          * </pre>
          *
-         * <code>uint32 msg_type = 5;</code>
-         * @return The msgType.
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
+         * @return The enum numeric value on the wire for msgType.
          */
-        @java.lang.Override
-        public int getMsgType() {
+        @java.lang.Override public int getMsgTypeValue() {
           return msgType_;
         }
         /**
@@ -4131,11 +4292,11 @@ public final class DefaultProtoMsg {
          * 消息类型
          * </pre>
          *
-         * <code>uint32 msg_type = 5;</code>
-         * @param value The msgType to set.
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
+         * @param value The enum numeric value on the wire for msgType to set.
          * @return This builder for chaining.
          */
-        public Builder setMsgType(int value) {
+        public Builder setMsgTypeValue(int value) {
           
           msgType_ = value;
           onChanged();
@@ -4146,7 +4307,39 @@ public final class DefaultProtoMsg {
          * 消息类型
          * </pre>
          *
-         * <code>uint32 msg_type = 5;</code>
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
+         * @return The msgType.
+         */
+        @java.lang.Override
+        public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType getMsgType() {
+          @SuppressWarnings("deprecation")
+          com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType result = com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.valueOf(msgType_);
+          return result == null ? com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.UNRECOGNIZED : result;
+        }
+        /**
+         * <pre>
+         * 消息类型
+         * </pre>
+         *
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
+         * @param value The msgType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMsgType(com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          
+          msgType_ = value.getNumber();
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * 消息类型
+         * </pre>
+         *
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msg_type = 5;</code>
          * @return This builder for chaining.
          */
         public Builder clearMsgType() {
@@ -4520,9 +4713,109 @@ public final class DefaultProtoMsg {
           return this;
         }
 
+        private java.lang.Object acceptSessionId_ = "";
+        /**
+         * <pre>
+         * 接收者的会话id
+         * </pre>
+         *
+         * <code>string acceptSessionId = 11;</code>
+         * @return The acceptSessionId.
+         */
+        public java.lang.String getAcceptSessionId() {
+          java.lang.Object ref = acceptSessionId_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            acceptSessionId_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <pre>
+         * 接收者的会话id
+         * </pre>
+         *
+         * <code>string acceptSessionId = 11;</code>
+         * @return The bytes for acceptSessionId.
+         */
+        public com.google.protobuf.ByteString
+            getAcceptSessionIdBytes() {
+          java.lang.Object ref = acceptSessionId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            acceptSessionId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <pre>
+         * 接收者的会话id
+         * </pre>
+         *
+         * <code>string acceptSessionId = 11;</code>
+         * @param value The acceptSessionId to set.
+         * @return This builder for chaining.
+         */
+        public Builder setAcceptSessionId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  
+          acceptSessionId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * 接收者的会话id
+         * </pre>
+         *
+         * <code>string acceptSessionId = 11;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearAcceptSessionId() {
+          
+          acceptSessionId_ = getDefaultInstance().getAcceptSessionId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * 接收者的会话id
+         * </pre>
+         *
+         * <code>string acceptSessionId = 11;</code>
+         * @param value The bytes for acceptSessionId to set.
+         * @return This builder for chaining.
+         */
+        public Builder setAcceptSessionIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          
+          acceptSessionId_ = value;
+          onChanged();
+          return this;
+        }
+
         private java.lang.Object json_ = "";
         /**
-         * <code>string json = 11;</code>
+         * <pre>
+         * 附加信息
+         * </pre>
+         *
+         * <code>string json = 12;</code>
          * @return The json.
          */
         public java.lang.String getJson() {
@@ -4538,7 +4831,11 @@ public final class DefaultProtoMsg {
           }
         }
         /**
-         * <code>string json = 11;</code>
+         * <pre>
+         * 附加信息
+         * </pre>
+         *
+         * <code>string json = 12;</code>
          * @return The bytes for json.
          */
         public com.google.protobuf.ByteString
@@ -4555,7 +4852,11 @@ public final class DefaultProtoMsg {
           }
         }
         /**
-         * <code>string json = 11;</code>
+         * <pre>
+         * 附加信息
+         * </pre>
+         *
+         * <code>string json = 12;</code>
          * @param value The json to set.
          * @return This builder for chaining.
          */
@@ -4570,7 +4871,11 @@ public final class DefaultProtoMsg {
           return this;
         }
         /**
-         * <code>string json = 11;</code>
+         * <pre>
+         * 附加信息
+         * </pre>
+         *
+         * <code>string json = 12;</code>
          * @return This builder for chaining.
          */
         public Builder clearJson() {
@@ -4580,7 +4885,11 @@ public final class DefaultProtoMsg {
           return this;
         }
         /**
-         * <code>string json = 11;</code>
+         * <pre>
+         * 附加信息
+         * </pre>
+         *
+         * <code>string json = 12;</code>
          * @param value The bytes for json to set.
          * @return This builder for chaining.
          */
@@ -5717,15 +6026,15 @@ public final class DefaultProtoMsg {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-       * @return The enum numeric value on the wire for notifyType.
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+       * @return The enum numeric value on the wire for msgType.
        */
-      int getNotifyTypeValue();
+      int getMsgTypeValue();
       /**
-       * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-       * @return The notifyType.
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+       * @return The msgType.
        */
-      com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType getNotifyType();
+      com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType getMsgType();
 
       /**
        * <code>string senderId = 2;</code>
@@ -5762,6 +6071,18 @@ public final class DefaultProtoMsg {
        */
       com.google.protobuf.ByteString
           getTimestampBytes();
+
+      /**
+       * <code>string nodeToken = 5;</code>
+       * @return The nodeToken.
+       */
+      java.lang.String getNodeToken();
+      /**
+       * <code>string nodeToken = 5;</code>
+       * @return The bytes for nodeToken.
+       */
+      com.google.protobuf.ByteString
+          getNodeTokenBytes();
     }
     /**
      * <pre>
@@ -5780,10 +6101,11 @@ public final class DefaultProtoMsg {
         super(builder);
       }
       private MessageNotification() {
-        notifyType_ = 0;
+        msgType_ = 0;
         senderId_ = "";
         jsonContent_ = "";
         timestamp_ = "";
+        nodeToken_ = "";
       }
 
       @java.lang.Override
@@ -5819,7 +6141,7 @@ public final class DefaultProtoMsg {
               case 8: {
                 int rawValue = input.readEnum();
 
-                notifyType_ = rawValue;
+                msgType_ = rawValue;
                 break;
               }
               case 18: {
@@ -5838,6 +6160,12 @@ public final class DefaultProtoMsg {
                 java.lang.String s = input.readStringRequireUtf8();
 
                 timestamp_ = s;
+                break;
+              }
+              case 42: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                nodeToken_ = s;
                 break;
               }
               default: {
@@ -5872,23 +6200,23 @@ public final class DefaultProtoMsg {
                 com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification.class, com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification.Builder.class);
       }
 
-      public static final int NOTIFYTYPE_FIELD_NUMBER = 1;
-      private int notifyType_;
+      public static final int MSGTYPE_FIELD_NUMBER = 1;
+      private int msgType_;
       /**
-       * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-       * @return The enum numeric value on the wire for notifyType.
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+       * @return The enum numeric value on the wire for msgType.
        */
-      @java.lang.Override public int getNotifyTypeValue() {
-        return notifyType_;
+      @java.lang.Override public int getMsgTypeValue() {
+        return msgType_;
       }
       /**
-       * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-       * @return The notifyType.
+       * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+       * @return The msgType.
        */
-      @java.lang.Override public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType getNotifyType() {
+      @java.lang.Override public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType getMsgType() {
         @SuppressWarnings("deprecation")
-        com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType result = com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType.valueOf(notifyType_);
-        return result == null ? com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType.UNRECOGNIZED : result;
+        com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType result = com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.valueOf(msgType_);
+        return result == null ? com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.UNRECOGNIZED : result;
       }
 
       public static final int SENDERID_FIELD_NUMBER = 2;
@@ -6005,6 +6333,44 @@ public final class DefaultProtoMsg {
         }
       }
 
+      public static final int NODETOKEN_FIELD_NUMBER = 5;
+      private volatile java.lang.Object nodeToken_;
+      /**
+       * <code>string nodeToken = 5;</code>
+       * @return The nodeToken.
+       */
+      @java.lang.Override
+      public java.lang.String getNodeToken() {
+        java.lang.Object ref = nodeToken_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          nodeToken_ = s;
+          return s;
+        }
+      }
+      /**
+       * <code>string nodeToken = 5;</code>
+       * @return The bytes for nodeToken.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getNodeTokenBytes() {
+        java.lang.Object ref = nodeToken_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          nodeToken_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
       private byte memoizedIsInitialized = -1;
       @java.lang.Override
       public final boolean isInitialized() {
@@ -6019,8 +6385,8 @@ public final class DefaultProtoMsg {
       @java.lang.Override
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        if (notifyType_ != com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType.SESSION_ON.getNumber()) {
-          output.writeEnum(1, notifyType_);
+        if (msgType_ != com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.SESSION_ON.getNumber()) {
+          output.writeEnum(1, msgType_);
         }
         if (!getSenderIdBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 2, senderId_);
@@ -6031,6 +6397,9 @@ public final class DefaultProtoMsg {
         if (!getTimestampBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 4, timestamp_);
         }
+        if (!getNodeTokenBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 5, nodeToken_);
+        }
         unknownFields.writeTo(output);
       }
 
@@ -6040,9 +6409,9 @@ public final class DefaultProtoMsg {
         if (size != -1) return size;
 
         size = 0;
-        if (notifyType_ != com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType.SESSION_ON.getNumber()) {
+        if (msgType_ != com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.SESSION_ON.getNumber()) {
           size += com.google.protobuf.CodedOutputStream
-            .computeEnumSize(1, notifyType_);
+            .computeEnumSize(1, msgType_);
         }
         if (!getSenderIdBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, senderId_);
@@ -6052,6 +6421,9 @@ public final class DefaultProtoMsg {
         }
         if (!getTimestampBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, timestamp_);
+        }
+        if (!getNodeTokenBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, nodeToken_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -6068,13 +6440,15 @@ public final class DefaultProtoMsg {
         }
         com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification other = (com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification) obj;
 
-        if (notifyType_ != other.notifyType_) return false;
+        if (msgType_ != other.msgType_) return false;
         if (!getSenderId()
             .equals(other.getSenderId())) return false;
         if (!getJsonContent()
             .equals(other.getJsonContent())) return false;
         if (!getTimestamp()
             .equals(other.getTimestamp())) return false;
+        if (!getNodeToken()
+            .equals(other.getNodeToken())) return false;
         if (!unknownFields.equals(other.unknownFields)) return false;
         return true;
       }
@@ -6086,14 +6460,16 @@ public final class DefaultProtoMsg {
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + NOTIFYTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + notifyType_;
+        hash = (37 * hash) + MSGTYPE_FIELD_NUMBER;
+        hash = (53 * hash) + msgType_;
         hash = (37 * hash) + SENDERID_FIELD_NUMBER;
         hash = (53 * hash) + getSenderId().hashCode();
         hash = (37 * hash) + JSONCONTENT_FIELD_NUMBER;
         hash = (53 * hash) + getJsonContent().hashCode();
         hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
         hash = (53 * hash) + getTimestamp().hashCode();
+        hash = (37 * hash) + NODETOKEN_FIELD_NUMBER;
+        hash = (53 * hash) + getNodeToken().hashCode();
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -6231,13 +6607,15 @@ public final class DefaultProtoMsg {
         @java.lang.Override
         public Builder clear() {
           super.clear();
-          notifyType_ = 0;
+          msgType_ = 0;
 
           senderId_ = "";
 
           jsonContent_ = "";
 
           timestamp_ = "";
+
+          nodeToken_ = "";
 
           return this;
         }
@@ -6265,10 +6643,11 @@ public final class DefaultProtoMsg {
         @java.lang.Override
         public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification buildPartial() {
           com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification result = new com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification(this);
-          result.notifyType_ = notifyType_;
+          result.msgType_ = msgType_;
           result.senderId_ = senderId_;
           result.jsonContent_ = jsonContent_;
           result.timestamp_ = timestamp_;
+          result.nodeToken_ = nodeToken_;
           onBuilt();
           return result;
         }
@@ -6317,8 +6696,8 @@ public final class DefaultProtoMsg {
 
         public Builder mergeFrom(com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification other) {
           if (other == com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MessageNotification.getDefaultInstance()) return this;
-          if (other.notifyType_ != 0) {
-            setNotifyTypeValue(other.getNotifyTypeValue());
+          if (other.msgType_ != 0) {
+            setMsgTypeValue(other.getMsgTypeValue());
           }
           if (!other.getSenderId().isEmpty()) {
             senderId_ = other.senderId_;
@@ -6330,6 +6709,10 @@ public final class DefaultProtoMsg {
           }
           if (!other.getTimestamp().isEmpty()) {
             timestamp_ = other.timestamp_;
+            onChanged();
+          }
+          if (!other.getNodeToken().isEmpty()) {
+            nodeToken_ = other.nodeToken_;
             onChanged();
           }
           this.mergeUnknownFields(other.unknownFields);
@@ -6361,56 +6744,56 @@ public final class DefaultProtoMsg {
           return this;
         }
 
-        private int notifyType_ = 0;
+        private int msgType_ = 0;
         /**
-         * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-         * @return The enum numeric value on the wire for notifyType.
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+         * @return The enum numeric value on the wire for msgType.
          */
-        @java.lang.Override public int getNotifyTypeValue() {
-          return notifyType_;
+        @java.lang.Override public int getMsgTypeValue() {
+          return msgType_;
         }
         /**
-         * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-         * @param value The enum numeric value on the wire for notifyType to set.
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+         * @param value The enum numeric value on the wire for msgType to set.
          * @return This builder for chaining.
          */
-        public Builder setNotifyTypeValue(int value) {
+        public Builder setMsgTypeValue(int value) {
           
-          notifyType_ = value;
+          msgType_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-         * @return The notifyType.
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+         * @return The msgType.
          */
         @java.lang.Override
-        public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType getNotifyType() {
+        public com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType getMsgType() {
           @SuppressWarnings("deprecation")
-          com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType result = com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType.valueOf(notifyType_);
-          return result == null ? com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType.UNRECOGNIZED : result;
+          com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType result = com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.valueOf(msgType_);
+          return result == null ? com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType.UNRECOGNIZED : result;
         }
         /**
-         * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
-         * @param value The notifyType to set.
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
+         * @param value The msgType to set.
          * @return This builder for chaining.
          */
-        public Builder setNotifyType(com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.NotifyType value) {
+        public Builder setMsgType(com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.MsgType value) {
           if (value == null) {
             throw new NullPointerException();
           }
           
-          notifyType_ = value.getNumber();
+          msgType_ = value.getNumber();
           onChanged();
           return this;
         }
         /**
-         * <code>.com.black.bim.im.protobuf.ProtoMsg.NotifyType notifyType = 1;</code>
+         * <code>.com.black.bim.im.protobuf.ProtoMsg.MsgType msgType = 1;</code>
          * @return This builder for chaining.
          */
-        public Builder clearNotifyType() {
+        public Builder clearMsgType() {
           
-          notifyType_ = 0;
+          msgType_ = 0;
           onChanged();
           return this;
         }
@@ -6639,6 +7022,82 @@ public final class DefaultProtoMsg {
   checkByteStringIsUtf8(value);
           
           timestamp_ = value;
+          onChanged();
+          return this;
+        }
+
+        private java.lang.Object nodeToken_ = "";
+        /**
+         * <code>string nodeToken = 5;</code>
+         * @return The nodeToken.
+         */
+        public java.lang.String getNodeToken() {
+          java.lang.Object ref = nodeToken_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            nodeToken_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string nodeToken = 5;</code>
+         * @return The bytes for nodeToken.
+         */
+        public com.google.protobuf.ByteString
+            getNodeTokenBytes() {
+          java.lang.Object ref = nodeToken_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            nodeToken_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string nodeToken = 5;</code>
+         * @param value The nodeToken to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNodeToken(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  
+          nodeToken_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string nodeToken = 5;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearNodeToken() {
+          
+          nodeToken_ = getDefaultInstance().getNodeToken();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string nodeToken = 5;</code>
+         * @param value The bytes for nodeToken to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNodeTokenBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          
+          nodeToken_ = value;
           onChanged();
           return this;
         }
@@ -10302,46 +10761,49 @@ public final class DefaultProtoMsg {
   static {
     java.lang.String[] descriptorData = {
       "\n\025DefaultProtoMsg.proto\022\031com.black.bim.i" +
-      "m.protobuf\"\221\014\n\010ProtoMsg\032q\n\014LoginRequest\022" +
+      "m.protobuf\"\210\r\n\010ProtoMsg\032q\n\014LoginRequest\022" +
       "\013\n\003uid\030\001 \001(\t\022\020\n\010deviceId\030\002 \001(\t\022\r\n\005token\030" +
       "\003 \001(\t\022\020\n\010platform\030\004 \001(\r\022\023\n\013app_version\030\005" +
       " \001(\t\022\014\n\004json\030\006 \001(\t\032K\n\rLoginResponse\022\016\n\006r" +
       "esult\030\001 \001(\010\022\014\n\004code\030\002 \001(\r\022\014\n\004info\030\003 \001(\t\022" +
-      "\016\n\006expose\030\004 \001(\r\032\253\001\n\016MessageRequest\022\016\n\006ms" +
+      "\016\n\006expose\030\004 \001(\r\032\361\001\n\016MessageRequest\022\016\n\006ms" +
       "g_id\030\001 \001(\004\022\014\n\004from\030\002 \001(\t\022\n\n\002to\030\003 \001(\t\022\014\n\004" +
-      "time\030\004 \001(\004\022\020\n\010msg_type\030\005 \001(\r\022\017\n\007content\030" +
-      "\006 \001(\t\022\013\n\003url\030\010 \001(\t\022\020\n\010property\030\t \001(\t\022\021\n\t" +
-      "from_nick\030\n \001(\t\022\014\n\004json\030\013 \001(\t\032v\n\017Message" +
-      "Response\022\016\n\006result\030\001 \001(\010\022\014\n\004code\030\002 \001(\r\022\014" +
-      "\n\004info\030\003 \001(\t\022\016\n\006expose\030\004 \001(\r\022\022\n\nlast_blo" +
-      "ck\030\005 \001(\010\022\023\n\013block_index\030\006 \001(\007\032\223\001\n\023Messag" +
-      "eNotification\022B\n\nnotifyType\030\001 \001(\0162..com." +
-      "black.bim.im.protobuf.ProtoMsg.NotifyTyp" +
-      "e\022\020\n\010senderId\030\002 \001(\t\022\023\n\013jsonContent\030\003 \001(\t" +
-      "\022\021\n\ttimestamp\030\004 \001(\t\032:\n\020MessageHeartBeat\022" +
-      "\013\n\003seq\030\001 \001(\r\022\013\n\003uid\030\002 \001(\t\022\014\n\004json\030\003 \001(\t\032" +
-      "\266\004\n\016DefaultMessage\022:\n\004type\030\001 \001(\0162,.com.b" +
-      "lack.bim.im.protobuf.ProtoMsg.HeadType\022\020" +
-      "\n\010sequence\030\002 \001(\004\022\022\n\nsession_id\030\003 \001(\t\022F\n\014" +
-      "loginRequest\030\004 \001(\01320.com.black.bim.im.pr" +
-      "otobuf.ProtoMsg.LoginRequest\022H\n\rloginRes" +
-      "ponse\030\005 \001(\01321.com.black.bim.im.protobuf." +
-      "ProtoMsg.LoginResponse\022J\n\016messageRequest" +
-      "\030\006 \001(\01322.com.black.bim.im.protobuf.Proto" +
-      "Msg.MessageRequest\022L\n\017messageResponse\030\007 " +
-      "\001(\01323.com.black.bim.im.protobuf.ProtoMsg" +
-      ".MessageResponse\022M\n\014notification\030\010 \001(\01327" +
-      ".com.black.bim.im.protobuf.ProtoMsg.Mess" +
-      "ageNotification\022G\n\theartBeat\030\t \001(\01324.com" +
-      ".black.bim.im.protobuf.ProtoMsg.MessageH" +
-      "eartBeat\"\316\001\n\010HeadType\022\021\n\rLOGIN_REQUEST\020\000" +
-      "\022\022\n\016LOGIN_RESPONSE\020\001\022\022\n\016LOGOUT_REQUEST\020\002" +
-      "\022\023\n\017LOGOUT_RESPONSE\020\003\022\025\n\021KEEPALIVE_REQUE" +
-      "ST\020\004\022\026\n\022KEEPALIVE_RESPONSE\020\005\022\023\n\017MESSAGE_" +
-      "REQUEST\020\006\022\024\n\020MESSAGE_RESPONSE\020\007\022\030\n\024MESSA" +
-      "GE_NOTIFICATION\020\010\"C\n\nNotifyType\022\016\n\nSESSI" +
+      "time\030\004 \001(\004\022=\n\010msg_type\030\005 \001(\0162+.com.black" +
+      ".bim.im.protobuf.ProtoMsg.MsgType\022\017\n\007con" +
+      "tent\030\006 \001(\t\022\013\n\003url\030\010 \001(\t\022\020\n\010property\030\t \001(" +
+      "\t\022\021\n\tfrom_nick\030\n \001(\t\022\027\n\017acceptSessionId\030" +
+      "\013 \001(\t\022\014\n\004json\030\014 \001(\t\032v\n\017MessageResponse\022\016" +
+      "\n\006result\030\001 \001(\010\022\014\n\004code\030\002 \001(\r\022\014\n\004info\030\003 \001" +
+      "(\t\022\016\n\006expose\030\004 \001(\r\022\022\n\nlast_block\030\005 \001(\010\022\023" +
+      "\n\013block_index\030\006 \001(\007\032\240\001\n\023MessageNotificat" +
+      "ion\022<\n\007msgType\030\001 \001(\0162+.com.black.bim.im." +
+      "protobuf.ProtoMsg.MsgType\022\020\n\010senderId\030\002 " +
+      "\001(\t\022\023\n\013jsonContent\030\003 \001(\t\022\021\n\ttimestamp\030\004 " +
+      "\001(\t\022\021\n\tnodeToken\030\005 \001(\t\032:\n\020MessageHeartBe" +
+      "at\022\013\n\003seq\030\001 \001(\r\022\013\n\003uid\030\002 \001(\t\022\014\n\004json\030\003 \001" +
+      "(\t\032\266\004\n\016DefaultMessage\022:\n\004type\030\001 \001(\0162,.co" +
+      "m.black.bim.im.protobuf.ProtoMsg.HeadTyp" +
+      "e\022\020\n\010sequence\030\002 \001(\004\022\022\n\nsession_id\030\003 \001(\t\022" +
+      "F\n\014loginRequest\030\004 \001(\01320.com.black.bim.im" +
+      ".protobuf.ProtoMsg.LoginRequest\022H\n\rlogin" +
+      "Response\030\005 \001(\01321.com.black.bim.im.protob" +
+      "uf.ProtoMsg.LoginResponse\022J\n\016messageRequ" +
+      "est\030\006 \001(\01322.com.black.bim.im.protobuf.Pr" +
+      "otoMsg.MessageRequest\022L\n\017messageResponse" +
+      "\030\007 \001(\01323.com.black.bim.im.protobuf.Proto" +
+      "Msg.MessageResponse\022M\n\014notification\030\010 \001(" +
+      "\01327.com.black.bim.im.protobuf.ProtoMsg.M" +
+      "essageNotification\022G\n\theartBeat\030\t \001(\01324." +
+      "com.black.bim.im.protobuf.ProtoMsg.Messa" +
+      "geHeartBeat\"\316\001\n\010HeadType\022\021\n\rLOGIN_REQUES" +
+      "T\020\000\022\022\n\016LOGIN_RESPONSE\020\001\022\022\n\016LOGOUT_REQUES" +
+      "T\020\002\022\023\n\017LOGOUT_RESPONSE\020\003\022\025\n\021KEEPALIVE_RE" +
+      "QUEST\020\004\022\026\n\022KEEPALIVE_RESPONSE\020\005\022\023\n\017MESSA" +
+      "GE_REQUEST\020\006\022\024\n\020MESSAGE_RESPONSE\020\007\022\030\n\024ME" +
+      "SSAGE_NOTIFICATION\020\010\"g\n\007MsgType\022\016\n\nSESSI" +
       "ON_ON\020\000\022\017\n\013SESSION_OFF\020\001\022\024\n\020CONNECT_FINI" +
-      "SHED\020\002b\006proto3"
+      "SHED\020\002\022\014\n\010CHAT_MSG\020\003\022\027\n\023CHAT_MSG_COMMISS" +
+      "ION\020\004b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -10370,7 +10832,7 @@ public final class DefaultProtoMsg {
     internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageRequest_descriptor,
-        new java.lang.String[] { "MsgId", "From", "To", "Time", "MsgType", "Content", "Url", "Property", "FromNick", "Json", });
+        new java.lang.String[] { "MsgId", "From", "To", "Time", "MsgType", "Content", "Url", "Property", "FromNick", "AcceptSessionId", "Json", });
     internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageResponse_descriptor =
       internal_static_com_black_bim_im_protobuf_ProtoMsg_descriptor.getNestedTypes().get(3);
     internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageResponse_fieldAccessorTable = new
@@ -10382,7 +10844,7 @@ public final class DefaultProtoMsg {
     internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageNotification_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageNotification_descriptor,
-        new java.lang.String[] { "NotifyType", "SenderId", "JsonContent", "Timestamp", });
+        new java.lang.String[] { "MsgType", "SenderId", "JsonContent", "Timestamp", "NodeToken", });
     internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageHeartBeat_descriptor =
       internal_static_com_black_bim_im_protobuf_ProtoMsg_descriptor.getNestedTypes().get(5);
     internal_static_com_black_bim_im_protobuf_ProtoMsg_MessageHeartBeat_fieldAccessorTable = new

@@ -1,10 +1,8 @@
 package com.black.bim.client;
 
-import com.black.bim.config.BimConfigFactory;
-import com.black.bim.config.configPojo.BimClientConfig;
-import com.black.bim.config.configPojo.BimCommonConfig;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.handler.DefaultClientChannelInitializer;
+import com.black.bim.im.ImBaseClient;
 import com.black.bim.zk.BimLoadBalance;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -62,27 +60,6 @@ public class BimClient extends ImBaseClient {
         }
     }
 
-
-    private void initClient() throws Exception {
-        BimServerNodeInfo serverNodeInfo = BimLoadBalance.getServer();
-        b = new Bootstrap();
-        g = new NioEventLoopGroup();
-        b.group(g);
-        b.channel(NioSocketChannel.class);
-        b.option(ChannelOption.SO_KEEPALIVE, true);
-        b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-        b.remoteAddress(serverNodeInfo.getHost(), serverNodeInfo.getPort());
-        // 通道初始化
-        if (!isDefaultMsg) {
-            // 如果是用户自定义协议、检查是否传入了该协议的处理方式
-            notEmptyOrThrow(channelInitializer);
-            b.handler(channelInitializer);
-        } else {
-            // 默认通讯协议的处理方式
-            b.handler(new DefaultClientChannelInitializer());
-        }
-    }
-
     @Override
     public boolean connectToServer() {
         log.info("开始连接到服务器");
@@ -93,7 +70,7 @@ public class BimClient extends ImBaseClient {
                 BimClientSession bimClientSession = new BimClientSession(connect.channel());
                 bimClientSession.setConnected(true);
                 log.info("连接服务器成功");
-                this.setSession(bimClientSession);
+                setSession(bimClientSession);
                 return true;
             }
         } catch (Exception e) {
@@ -135,6 +112,27 @@ public class BimClient extends ImBaseClient {
             g.shutdownGracefully();
         } catch (Exception e) {
             log.error(String.format("关闭客户端失败；原因【%s】", e.getMessage()));
+        }
+    }
+
+    private void initClient() throws Exception {
+        BimServerNodeInfo serverNodeInfo = BimLoadBalance.getServer();
+        BimLoadBalance.closeZK();
+        b = new Bootstrap();
+        g = new NioEventLoopGroup();
+        b.group(g);
+        b.channel(NioSocketChannel.class);
+        b.option(ChannelOption.SO_KEEPALIVE, true);
+        b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+        b.remoteAddress(serverNodeInfo.getHost(), serverNodeInfo.getPort());
+        // 通道初始化
+        if (!isDefaultMsg) {
+            // 如果是用户自定义协议、检查是否传入了该协议的处理方式
+            notEmptyOrThrow(channelInitializer);
+            b.handler(channelInitializer);
+        } else {
+            // 默认通讯协议的处理方式
+            b.handler(new DefaultClientChannelInitializer());
         }
     }
 }

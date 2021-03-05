@@ -18,11 +18,15 @@ import java.util.Optional;
 public class BimLoadBalance {
 
     private static CuratorFramework client;
+
     private static ZkConfig zkConfig;
 
     public static BimServerNodeInfo getServer() throws Exception {
         // 取得负载最小的节点
         try {
+            zkConfig = BimConfigFactory.getConfig(ZkConfig.class);
+            client = ZkClientFactory.getClientSingleInstanceByConfig();
+            client.start();
             BimServerNodeInfo bimServerNodeInfo = client.getChildren().forPath(zkConfig.getWorkerManagePath()).stream()
                     // 匹配成全路径
                     .map(BimLoadBalance::getPathRegistered)
@@ -39,8 +43,13 @@ public class BimLoadBalance {
                     .get();
             return bimServerNodeInfo;
         } catch (Exception e) {
+            client.close();
             throw new NoAvailableServerException();
         }
+    }
+
+    public static void closeZK() {
+        client.close();
     }
 
     /**
@@ -55,11 +64,5 @@ public class BimLoadBalance {
     */
     private static int compareByBalance(BimServerNodeInfo n1, BimServerNodeInfo n2) {
         return n1.getBalance() - n2.getBalance();
-    }
-
-    static {
-        zkConfig = BimConfigFactory.getConfig(ZkConfig.class);
-        client = ZkClientFactory.getClientSingleInstanceByConfig();
-        client.start();
     }
 }

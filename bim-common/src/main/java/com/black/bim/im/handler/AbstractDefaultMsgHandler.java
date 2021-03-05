@@ -10,6 +10,8 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
  * @author：8568
  */
 public abstract class AbstractDefaultMsgHandler extends ChannelInboundHandlerAdapter {
+
+    // TODO 违背了里氏替换原则、需要做出修改
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (notMsg(msg)) {
@@ -24,6 +26,17 @@ public abstract class AbstractDefaultMsgHandler extends ChannelInboundHandlerAda
             super.channelRead(ctx, msg);
             return;
         }
+    }
+
+    /**
+     * Description: 子类如果想转交消息、请调用这个方法、请勿调用 super.channelRead(ctx, message)
+     *
+     * @param ctx
+     * @param msg
+     * @return: void
+    */
+    protected void topChanelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        super.channelRead(ctx, msg);
     }
 
     private boolean notMsg(Object msg) {

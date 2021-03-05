@@ -7,10 +7,9 @@ import com.black.bim.config.configPojo.BimCommonConfig;
 import com.black.bim.entity.UserInfo;
 import com.black.bim.im.exception.ServerCanNotAvailableException;
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
-import com.black.bim.potobuf.DefaultMsgBuilder;
+import com.black.bim.potobuf.DefaultClientMsgBuilder;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +50,7 @@ public class HeartBeatClientHandler extends AbstractDefaultMsgHandler {
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         BimClientSession session = BimClientSession.getSession(ctx);
         UserInfo user = session.getUser();
-        DefaultMessage message = DefaultMsgBuilder.buildHearBeatMsg(session);
+        DefaultMessage message = DefaultClientMsgBuilder.buildHearBeatMsg(session);
         // 发送心跳
         hearBeat(ctx, message);
     }

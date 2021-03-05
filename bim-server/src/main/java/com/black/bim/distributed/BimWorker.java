@@ -13,7 +13,7 @@ import org.apache.zookeeper.data.Stat;
 /**
  * @description：
  * Im节点的zk协调客户端
- * 当由新bim加入时创建节点、同步bim的负载信息
+ * 当有新bim加入时创建节点、同步节点信息
  * @author：8568
  */
 @Slf4j

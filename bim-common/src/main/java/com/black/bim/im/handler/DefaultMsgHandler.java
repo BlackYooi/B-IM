@@ -15,8 +15,8 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
 @Slf4j
 public class DefaultMsgHandler extends AbstractDefaultMsgHandler {
 
-    private BiConsumer<ChannelHandlerContext, DefaultMessage> consumer = null;
-    private List<HeadType> couldProcessMsgList = null;
+    protected BiConsumer<ChannelHandlerContext, DefaultMessage> consumer = null;
+    protected List<HeadType> couldProcessMsgList = null;
 
     public DefaultMsgHandler setConsumer(BiConsumer<ChannelHandlerContext, DefaultMessage> consumer) {
         this.consumer = consumer;

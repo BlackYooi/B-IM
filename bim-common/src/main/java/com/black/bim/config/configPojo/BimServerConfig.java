@@ -18,4 +18,9 @@ public class BimServerConfig extends BimBaseConfig {
      * 服务端地址
     */
     protected String ip;
+
+    /**
+     * 服务节点之间的token, 当通知消息携带的token等于这个值时改节点才是有效节点
+    */
+    protected String nodeToken;
 }

@@ -1,7 +1,7 @@
 package com.black.bim.session.dao;
 
 import com.black.bim.config.configPojo.RedisConfig;
-import com.black.bim.session.sessionEntity.SessionCache;
+import com.black.bim.session.sessionEntity.SessionCacheEntity;
 import com.black.bim.redis.BimRedis;
 import com.black.bim.util.JsonUtil;
 import redis.clients.jedis.Jedis;
@@ -28,7 +28,7 @@ public class SessionCacheRedisImpl implements SessionCacheDAO {
     }
 
     @Override
-    public void save(SessionCache s) {
+    public void save(SessionCacheEntity s) {
         String key = addPrefix(s.getSessionId());
         String value = JsonUtil.objectToJson(s);
         Jedis jedis = jedisPool.getResource();
@@ -37,14 +37,14 @@ public class SessionCacheRedisImpl implements SessionCacheDAO {
     }
 
     @Override
-    public SessionCache get(String sessionId) {
+    public SessionCacheEntity get(String sessionId) {
         String key = addPrefix(sessionId);
         Jedis jedis = jedisPool.getResource();
         String s = jedis.get(key);
         if (null == s || s.isEmpty()) {
             return null;
         }
-        return JsonUtil.jsonStringToObject(s, SessionCache.class);
+        return JsonUtil.jsonStringToObject(s, SessionCacheEntity.class);
     }
 
     @Override

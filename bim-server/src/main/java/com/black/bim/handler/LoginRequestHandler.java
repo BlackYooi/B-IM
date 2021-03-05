@@ -44,14 +44,18 @@ public class LoginRequestHandler extends AbstractDefaultMsgHandler {
                 .build();
         // 用户校验
         LoginStatus statue = checkUser(u);
-        LoginResponse.Builder response = buildLoginResponse(statue);
+        LoginResponse.Builder responseBody = buildLoginResponse(statue);
         // 回复客户端登录结果
-        session.writeAndFlush(msg.toBuilder().setLoginResponse(response).build());
+        DefaultMessage.Builder responseMsg = DefaultMessage.newBuilder()
+                .mergeFrom(msg)
+                .setLoginResponse(responseBody);
         if (LoginStatus.SUCCESS.equals(statue)) {
             session.setUser(u);
             session.bind();
             result = true;
+            session.writeAndFlush(responseMsg.setSessionId(session.getSessionId()).build());
         } else {
+            session.writeAndFlush(responseMsg.build());
             session.close();
         }
         return result;

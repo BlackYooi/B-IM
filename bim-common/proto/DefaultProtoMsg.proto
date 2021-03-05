@@ -24,14 +24,18 @@ message ProtoMsg {
         MESSAGE_NOTIFICATION = 8;
     }
 
-    /*通知消息枚举*/
-    enum NotifyType {
+    /*消息类型枚举*/
+    enum MsgType {
         // 服务器上线
         SESSION_ON = 0;
         // 服务器下线
         SESSION_OFF = 1;
         // 节点连接成功
         CONNECT_FINISHED = 2;
+        // 聊天消息
+        CHAT_MSG = 3;
+        // 聊天消息节点委托
+        CHAT_MSG_COMMISSION = 4;
     }
 
     /*登录请求*/
@@ -64,12 +68,12 @@ message ProtoMsg {
         uint64 msg_id = 1;
         // 来自用户的唯一标识
         string from = 2;
-        // 发送对象
+        // 发送对象的uid
         string to = 3;
         // 时间
         uint64 time = 4;
         // 消息类型
-        uint32 msg_type = 5;
+        MsgType msg_type = 5;
         // 内容
         string content = 6;
         // 链接
@@ -77,7 +81,10 @@ message ProtoMsg {
         string property = 9;
         // 昵称
         string from_nick = 10;
-        string json = 11;
+        // 接收者的会话id
+        string acceptSessionId = 11;
+        // 附加信息
+        string json = 12;
     }
 
     /*消息响应*/
@@ -98,10 +105,11 @@ message ProtoMsg {
 
     /*通知*/
     message MessageNotification {
-        NotifyType notifyType = 1;
+        MsgType msgType = 1;
         string senderId = 2;
         string jsonContent = 3;
         string timestamp = 4;
+        string nodeToken = 5;
     }
 
     /*心跳*/

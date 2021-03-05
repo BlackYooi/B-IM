@@ -1,6 +1,6 @@
 package com.black.bim.session.dao;
 
-import com.black.bim.session.sessionEntity.SessionCache;
+import com.black.bim.session.sessionEntity.SessionCacheEntity;
 import com.black.bim.session.sessionEntity.UserCache;
 
 /**
@@ -21,7 +21,7 @@ public interface UserCacheDAO
     /**
      * 增加用户的会话
     */
-    void addSession(String uid, SessionCache session);
+    void addSession(String uid, SessionCacheEntity session);
 
 
     /**

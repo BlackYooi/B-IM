@@ -3,6 +3,7 @@ package com.black.bim.handler;
 
 import com.black.bim.im.codec.DefaultMsgDecoder;
 import com.black.bim.im.codec.DefaultMsgEncoder;
+import com.black.bim.im.handler.ChatMsgPrintHandler;
 import com.black.bim.im.handler.DefaultMsgHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
@@ -21,7 +22,7 @@ public class DefaultClientChannelInitializer extends ChannelInitializer<SocketCh
         // 登录响应处理器
         ch.pipeline().addLast(new LoginResponseHandler());
         // 消息处理器
-        ch.pipeline().addLast(new DefaultMsgHandler());
+        ch.pipeline().addLast(new ChatMsgPrintHandler());
         // 异常处理器
         ch.pipeline().addLast(new ImExceptionHandler());
     }

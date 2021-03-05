@@ -23,7 +23,7 @@ public class ImExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        Optional<BimServerLocalSession> session = SessionManager.getInstance().getSession(ctx);
+        Optional<BimServerLocalSession> session = SessionManager.getInstance().getChannelSession(ctx);
         if (session.isPresent() && cause instanceof IOException) {
             session.get().close();
         }

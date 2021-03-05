@@ -25,11 +25,6 @@ public class BimClientSession extends ImSession {
 
     public static final AttributeKey<ImSession> SESSION_KEY = AttributeKey.valueOf("SESSION_KEY");
 
-    /**
-     * 变量属性值
-    */
-    private Map<String, Object> map = new HashMap<>();
-
     @Getter
     private Channel channel;
 
@@ -41,7 +36,7 @@ public class BimClientSession extends ImSession {
     */
     public BimClientSession(Channel channel) {
         this.channel = channel;
-        this.sessionId = String.valueOf("-1");
+        this.sessionId = "-1";
         channel.attr(BimClientSession.SESSION_KEY).set(this);
     }
 
@@ -65,9 +60,9 @@ public class BimClientSession extends ImSession {
     */
     public static void loginSuccess(ChannelHandlerContext ctx, DefaultMessage message) {
         Channel channel = ctx.channel();
-        BimClientSession clientSession = (BimClientSession) channel.attr(BimClientSession.SESSION_KEY).get();
-        clientSession.setSessionId(message.getSessionId());
-        clientSession.setLogin(true);
+        BimClientSession s = (BimClientSession) channel.attr(BimClientSession.SESSION_KEY).get();
+        s.setSessionId(message.getSessionId());
+        s.setLogin(true);
     }
 
     /**

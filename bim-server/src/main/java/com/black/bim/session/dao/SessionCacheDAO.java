@@ -1,7 +1,7 @@
 package com.black.bim.session.dao;
 
 
-import com.black.bim.session.sessionEntity.SessionCache;
+import com.black.bim.session.sessionEntity.SessionCacheEntity;
 
 /**
  * 会话管理  DAO
@@ -12,12 +12,12 @@ public interface SessionCacheDAO
     /**
      * 保存会话到缓存
     */
-    void save(SessionCache s);
+    void save(SessionCacheEntity s);
 
     /**
      * 从缓存获取会话
     */
-    SessionCache get(String sessionId);
+    SessionCacheEntity get(String sessionId);
 
     /**
      * 删除会话

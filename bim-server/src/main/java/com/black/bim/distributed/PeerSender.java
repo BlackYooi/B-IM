@@ -1,10 +1,13 @@
 package com.black.bim.distributed;
 
+import com.black.bim.config.BimConfigFactory;
+import com.black.bim.config.configPojo.BimServerConfig;
 import com.black.bim.entity.BimServerNodeInfo;
-import com.black.bim.handler.BimServerNodeHeartBeatHandler;
+import com.black.bim.handler.BimServerChatHandler;
+import com.black.bim.handler.ImExceptionHandler;
 import com.black.bim.im.codec.DefaultMsgDecoder;
 import com.black.bim.im.codec.DefaultMsgEncoder;
-import com.black.bim.handler.ImExceptionHandler;
+import com.black.bim.im.exception.PeerSendIsNotConnectionException;
 import com.black.bim.util.JsonUtil;
 import com.black.bim.util.TimeUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -42,9 +45,9 @@ public class PeerSender {
 
     private EventLoopGroup g;
 
+    private BimServerConfig serverConfig = BimConfigFactory.getConfig(BimServerConfig.class);
+
     public PeerSender(BimServerNodeInfo targetNode) {
-        b = new Bootstrap();
-        g = new NioEventLoopGroup();
         node = targetNode;
     }
 
@@ -60,6 +63,7 @@ public class PeerSender {
         final EventLoop eventLoop = f.channel().eventLoop();
         if (!f.isSuccess()) {
             log.info("连接失败!在10s之后准备尝试重连!");
+            log.error(f.cause().getMessage());
             eventLoop.schedule(() -> PeerSender.this.doConnect(), 10, TimeUnit.SECONDS);
             connected = false;
         } else {
@@ -70,7 +74,8 @@ public class PeerSender {
             // 发送连接成功的通知
             String msgJsonBody = JsonUtil.GSON.toJson(BimWorker.getInstance().getLocalNode());
             MessageNotification.Builder builder = MessageNotification.newBuilder()
-                    .setNotifyType(NotifyType.SESSION_ON)
+                    .setMsgType(MsgType.SESSION_ON)
+                    .setNodeToken(serverConfig.getNodeToken())
                     .setSenderId(BimWorker.getInstance().getLocalNode().getNodeId())
                     .setJsonContent(msgJsonBody)
                     .setTimestamp(TimeUtil.getCurrentTimeStamp());
@@ -79,6 +84,8 @@ public class PeerSender {
     };
 
     public void doConnect() {
+        b = new Bootstrap();
+        g = new NioEventLoopGroup();
         String host = node.getHost();
         int port = node.getPort();
         try {
@@ -94,7 +101,7 @@ public class PeerSender {
                             public void initChannel(SocketChannel ch) {
                                 ch.pipeline().addLast("decoder", new DefaultMsgDecoder());
                                 ch.pipeline().addLast("encoder", new DefaultMsgEncoder());
-                                ch.pipeline().addLast("imNodeHeartBeatClientHandler", new BimServerNodeHeartBeatHandler());
+                                ch.pipeline().addLast("chatMsg", new BimServerChatHandler());
                                 ch.pipeline().addLast("exceptionHandler", new ImExceptionHandler());
                             }
                         }
@@ -111,7 +118,7 @@ public class PeerSender {
     /**
      * 发送通知消息
     */
-    public void sendNotifyMsg(MessageNotification.Builder builder) {
+    public void sendNotifyMsg(MessageNotification.Builder builder) throws Exception {
         DefaultMessage msg = DefaultMessage.newBuilder()
                 .setType(HeadType.MESSAGE_NOTIFICATION)
                 .setNotification(builder)
@@ -119,18 +126,14 @@ public class PeerSender {
         writeAndFlush(msg);
     }
 
-    public void stopConnecting()
-    {
+    public void stopConnecting() {
         g.shutdownGracefully();
         connected = false;
     }
 
-    public void writeAndFlush(Object pkg)
-    {
-        if (connected == false)
-        {
-            log.error("分布式节点未连接:", node.toString());
-            return;
+    public void writeAndFlush(Object pkg) throws Exception {
+        if (connected == false) {
+            throw new PeerSendIsNotConnectionException("", node.getNodeId());
         }
         channel.writeAndFlush(pkg);
     }

@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * @description：
+ * 指的时存放在节点上的session
  * @author：8568
  */
 @Slf4j
@@ -30,11 +31,6 @@ public class BimServerLocalSession extends ImSession {
      * 登录过后的sessionId
      */
     protected String sessionId;
-
-    /**
-     * session中存储的session 变量属性值
-     */
-    private Map<String, Object> map = new HashMap<String, Object>();
 
     public BimServerLocalSession(Channel c) {
         channel = c;

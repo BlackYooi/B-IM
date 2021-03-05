@@ -29,11 +29,6 @@ public class WorkerRoute {
     */
     private CuratorFramework client = null;
 
-    /**
-     * 地址
-    */
-    private String pathRegistered = null;
-
     private ZkConfig zkConfig = BimConfigFactory.getConfig(ZkConfig.class);
 
     /**
@@ -57,8 +52,6 @@ public class WorkerRoute {
 
     public void init() {
         try {
-            // 初始化节点信息
-            initRouteInfo();
             // 订阅节点的增加和删除事件
             CuratorCache curatorCache = CuratorCache.build(client, zkConfig.getWorkerManagePath());
             CuratorCacheListener listener = CuratorCacheListener
@@ -69,25 +62,6 @@ public class WorkerRoute {
             curatorCache.start();
         } catch (Exception e) {
             throw new RuntimeException("工作路由器初始化失败");
-        }
-    }
-
-    /**
-     * 一个服务刚建立时需要获取已经存在的节点
-    */
-    private void initRouteInfo() {
-        try {
-            client.getChildren().forPath(zkConfig.getWorkerManagePath()).stream()
-            .map(BimWorker::getFullPathByChildPath)
-            // 获取bimNode
-            .map(Either.liftTuple2(client.getData()::forPath))
-            .filter(Either::isRight)
-            .map(Either::getRight)
-            .filter(Optional::isPresent)
-            .map(Optional<Tuple2<String, byte[]>>::get)
-            .forEach(tuple -> processNodeAdded(tuple._1(), tuple._2()));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -121,6 +95,9 @@ public class WorkerRoute {
     private void processNodeAdded(String fullPath, byte[] nodeInfoData) {
         BimServerNodeInfo node = JSONObject.parseObject(nodeInfoData, BimServerNodeInfo.class);
         String nodeId = BimWorker.getInstance().parsingId(fullPath);
+        if (nodeId.equals(BimWorker.getInstance().getLocalNode().getNodeId())) {
+            return;
+        }
         node.setNodeId(nodeId);
         log.info("[TreeCache]节点更新端口, path={}, data={}",
                 fullPath, node);
@@ -164,7 +141,7 @@ public class WorkerRoute {
     /**
      * 发送广播消息、因为是服务节点之间的消息、所以消息类型是：通知
     */
-    public void broadcast(DefaultProtoMsg.ProtoMsg.MessageNotification.Builder builder) {
+    public void broadcast(DefaultProtoMsg.ProtoMsg.MessageNotification.Builder builder) throws Exception {
         // 不需要向自己发送消息
         String localId = BimWorker.getInstance().getLocalNode().getNodeId();
         for (String id : workers.keySet()) {

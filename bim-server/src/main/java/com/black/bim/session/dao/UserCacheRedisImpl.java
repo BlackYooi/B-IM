@@ -1,7 +1,7 @@
 package com.black.bim.session.dao;
 
 import com.black.bim.config.configPojo.RedisConfig;
-import com.black.bim.session.sessionEntity.SessionCache;
+import com.black.bim.session.sessionEntity.SessionCacheEntity;
 import com.black.bim.session.sessionEntity.UserCache;
 import com.black.bim.redis.BimRedis;
 import com.black.bim.util.JsonUtil;
@@ -49,7 +49,7 @@ public class UserCacheRedisImpl implements UserCacheDAO {
     }
 
     @Override
-    public void addSession(String userUid, SessionCache session) {
+    public void addSession(String userUid, SessionCacheEntity session) {
         UserCache userCache = get(userUid);
         if (null == userCache) {
             return;
