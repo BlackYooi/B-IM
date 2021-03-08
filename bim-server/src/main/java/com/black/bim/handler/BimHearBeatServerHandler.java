@@ -15,11 +15,11 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
  * @description：
  * @author：8568
  */
-public class HearBeatServerHandler extends IdleStateHandler {
+public class BimHearBeatServerHandler extends IdleStateHandler {
 
     private static BimCommonConfig config = BimConfigFactory.getConfig(BimCommonConfig.class);
 
-    public HearBeatServerHandler() {
+    public BimHearBeatServerHandler() {
         super(config.getHeartBeatInterval(), 0, 0, TimeUnit.SECONDS);
     }
 

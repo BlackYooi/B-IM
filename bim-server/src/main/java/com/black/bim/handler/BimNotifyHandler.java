@@ -9,7 +9,7 @@ import io.netty.channel.ChannelHandlerContext;
  * 通知消息的处理器
  * @author：8568
  */
-public class NotifyHandler extends AbstractDefaultMsgHandler {
+public class BimNotifyHandler extends AbstractDefaultMsgHandler {
     @Override
     protected Boolean msgCouldProcess(DefaultProtoMsg.ProtoMsg.DefaultMessage message) {
         return message.getType().equals(DefaultProtoMsg.ProtoMsg.HeadType.MESSAGE_NOTIFICATION);

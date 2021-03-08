@@ -10,7 +10,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
  * @description：im异常处理器
  * @author：8568
  */
-public class ImExceptionHandler extends AbstractDefaultMsgHandler {
+public class BimClientExceptionHandler extends AbstractDefaultMsgHandler {
 
     /**
      * 异常处理、这里是日志打印

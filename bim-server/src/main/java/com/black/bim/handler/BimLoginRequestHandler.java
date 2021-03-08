@@ -18,7 +18,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class LoginRequestHandler extends AbstractDefaultMsgHandler {
+public class BimLoginRequestHandler extends AbstractDefaultMsgHandler {
 
     @Override
     protected Boolean msgCouldProcess(DefaultMessage message) {

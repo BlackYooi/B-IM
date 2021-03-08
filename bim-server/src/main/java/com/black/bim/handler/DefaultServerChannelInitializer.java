@@ -11,7 +11,7 @@ import io.netty.channel.socket.SocketChannel;
  */
 public class DefaultServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    LoginRequestHandler loginRequestHandler = new LoginRequestHandler();
+    BimLoginRequestHandler loginRequestHandler = new BimLoginRequestHandler();
     BimServerChatHandler chatHandler = new BimServerChatHandler();
 
     @Override
@@ -21,16 +21,16 @@ public class DefaultServerChannelInitializer extends ChannelInitializer<SocketCh
         // 编码器
         ch.pipeline().addLast("encode", new DefaultMsgEncoder());
         // 心跳
-        ch.pipeline().addLast("heartBeat", new HearBeatServerHandler());
+        ch.pipeline().addLast("heartBeat", new BimHearBeatServerHandler());
         // 权限验证
         ch.pipeline().addLast("check", new BimCheckUserHandler());
         // 处理登录
         ch.pipeline().addLast(loginRequestHandler);
         // 通知消息处理器
-        ch.pipeline().addLast(new NotifyHandler());
+        ch.pipeline().addLast(new BimNotifyHandler());
         // 消息处理
         ch.pipeline().addLast(this.chatHandler);
         // 异常处理
-        ch.pipeline().addLast(new ImExceptionHandler());
+        ch.pipeline().addLast(new BimServerExceptionHandler());
     }
 }

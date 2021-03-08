@@ -21,7 +21,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
  * @description：客户端心跳处理器
  * @author：8568
  */
-public class HeartBeatClientHandler extends AbstractDefaultMsgHandler {
+public class BimHeartBeatClientHandler extends AbstractDefaultMsgHandler {
 
     BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
 

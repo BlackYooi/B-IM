@@ -12,7 +12,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  * @description：客户登录响应处理器
  * @author：8568
  */
-public class LoginResponseHandler extends AbstractDefaultMsgHandler {
+public class BimLoginResponseHandler extends AbstractDefaultMsgHandler {
 
     @Override
     protected Boolean msgCouldProcess(DefaultMessage message) {
@@ -26,7 +26,7 @@ public class LoginResponseHandler extends AbstractDefaultMsgHandler {
             // 保存会话
             BimClientSession.loginSuccess(ctx, message);
             // 在编码器后面添加心跳处理器
-            pipeline.addAfter("encode", "heatBeat", new HeartBeatClientHandler());
+            pipeline.addAfter("encode", "heatBeat", new BimHeartBeatClientHandler());
             // 移除登录响应器
             pipeline.remove(this);
         } else {

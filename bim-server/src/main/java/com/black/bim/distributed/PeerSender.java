@@ -4,7 +4,7 @@ import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.BimServerConfig;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.handler.BimServerChatHandler;
-import com.black.bim.handler.ImExceptionHandler;
+import com.black.bim.handler.BimServerExceptionHandler;
 import com.black.bim.im.codec.DefaultMsgDecoder;
 import com.black.bim.im.codec.DefaultMsgEncoder;
 import com.black.bim.im.exception.PeerSendIsNotConnectionException;
@@ -19,7 +19,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.GenericFutureListener;
 import lombok.Getter;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
@@ -96,7 +95,7 @@ public class PeerSender {
                                 ch.pipeline().addLast("decoder", new DefaultMsgDecoder());
                                 ch.pipeline().addLast("encoder", new DefaultMsgEncoder());
                                 ch.pipeline().addLast("chatMsg", new BimServerChatHandler());
-                                ch.pipeline().addLast("exceptionHandler", new ImExceptionHandler());
+                                ch.pipeline().addLast("exceptionHandler", new BimServerExceptionHandler());
                             }
                         }
                 );
