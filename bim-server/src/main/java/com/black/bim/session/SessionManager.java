@@ -3,17 +3,16 @@ package com.black.bim.session;
 import com.black.bim.distributed.BimWorker;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.im.ImSession;
-import com.black.bim.session.sessionImpl.BimServerLocalSession;
-import com.black.bim.session.sessionImpl.BimServerNodeSession;
+import com.black.bim.redis.BimRedis;
 import com.black.bim.session.dao.UserCacheDAO;
 import com.black.bim.session.dao.UserCacheRedisImpl;
 import com.black.bim.session.sessionEntity.SessionCacheEntity;
 import com.black.bim.session.sessionEntity.UserCache;
-import com.black.bim.redis.BimRedis;
+import com.black.bim.session.sessionImpl.BimServerLocalSession;
+import com.black.bim.session.sessionImpl.BimServerNodeSession;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.vavr.control.Try;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description：
  * @author：8568
  */
-@Slf4j
 public class SessionManager {
 
     private UserCacheDAO userCacheDao;
@@ -53,7 +51,6 @@ public class SessionManager {
                 || null == localSession.getUser().getUid()) {
             throw new RuntimeException("session参数不能为空");
         }
-        log.info("addSession: {}", localSession.toString());
         // 保存到会话清单
         sessionMap.put(localSession.getSessionId(), localSession);
         // 保存到redis
@@ -71,7 +68,6 @@ public class SessionManager {
             // 添加会话
             userCacheDao.addSession(localSession.getUser().getUid(), sessionCache);
         }
-        log.info("添加会话成功");
         // 更新负载数
         BimWorker.getInstance().incBalance();
         // TODO？ 通知其它服务器？
@@ -80,12 +76,10 @@ public class SessionManager {
     public List<ImSession> getSessionByUserId(String userUid) {
         UserCache userCache = userCacheDao.get(userUid);
         if (null == userCache) {
-            log.info("用户：{} 下线了? 没有在缓存中找到记录 ", userUid);
             return null;
         }
         List<SessionCacheEntity> allSession = userCache.getSessions();
         if (null == allSession || allSession.size() == 0) {
-            log.info("用户：{} 下线了? 没有在缓存中找到记录 ", userUid);
         }
         List<ImSession> sessions = new LinkedList<>();
         allSession.stream().forEach( sessionCache -> {

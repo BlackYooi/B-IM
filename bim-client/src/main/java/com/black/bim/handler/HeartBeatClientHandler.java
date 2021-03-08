@@ -11,17 +11,16 @@ import com.black.bim.potobuf.DefaultClientMsgBuilder;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
+import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
+import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
 
 /**
  * @description：客户端心跳处理器
  * @author：8568
  */
-@Slf4j
 public class HeartBeatClientHandler extends AbstractDefaultMsgHandler {
 
     BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
@@ -35,7 +34,8 @@ public class HeartBeatClientHandler extends AbstractDefaultMsgHandler {
     protected void processMsg(ChannelHandlerContext ctx, DefaultMessage message) throws Exception {
         HeadType type = message.getType();
         if (type.equals(HeadType.KEEPALIVE_RESPONSE)) {
-            log.info("❤pong❤");
+            // TODO
+//            log.info("❤pong❤");
             return;
         } else {
             // 交到下一站处理
@@ -58,7 +58,8 @@ public class HeartBeatClientHandler extends AbstractDefaultMsgHandler {
     private void hearBeat(ChannelHandlerContext ctx, DefaultMessage message) {
         ctx.executor().scheduleAtFixedRate(() -> {
             if (ctx.channel().isActive()) {
-                log.info("❤ping❤");
+                // TODO
+//                log.info("❤ping❤");
                 ChannelFuture channelFuture = ctx.writeAndFlush(message);
                 channelFuture.addListener(new ChannelFutureListener() {
                     @Override

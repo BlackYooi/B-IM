@@ -18,7 +18,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.GenericFutureListener;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +30,6 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  * 节点之间的通讯也用的是nio
  * @author：8568
  */
-@Slf4j
 public class PeerSender {
 
     @Getter
@@ -53,7 +51,6 @@ public class PeerSender {
 
     private GenericFutureListener<ChannelFuture> closeListener = (ChannelFuture f) ->
     {
-        log.info("节点连接已经断开……{}", node.toString());
         channel = null;
         connected = false;
     };
@@ -62,13 +59,10 @@ public class PeerSender {
     {
         final EventLoop eventLoop = f.channel().eventLoop();
         if (!f.isSuccess()) {
-            log.info("连接失败!在10s之后准备尝试重连!");
-            log.error(f.cause().getMessage());
             eventLoop.schedule(() -> PeerSender.this.doConnect(), 10, TimeUnit.SECONDS);
             connected = false;
         } else {
             connected = true;
-            log.info(new Date() + "节点连接成功:{}", node.toString());
             channel = f.channel();
             channel.closeFuture().addListener(closeListener);
             // 发送连接成功的通知
@@ -107,11 +101,9 @@ public class PeerSender {
                         }
                 );
             }
-            log.info(new Date() + "开始连接分布式节点:{}", node.toString());
             ChannelFuture f = b.connect();
             f.addListener(connectedListener);
         } catch (Exception e) {
-            log.error("客户端连接失败!" + e.getMessage());
         }
     }
 

@@ -11,7 +11,6 @@ import com.black.bim.session.sessionImpl.BimServerLocalSession;
 import com.black.bim.session.sessionImpl.BimServerNodeSession;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,6 @@ import java.util.Optional;
  * @author：8568
  */
 @ChannelHandler.Sharable
-@Slf4j
 public class BimServerChatHandler extends AbstractDefaultMsgHandler {
 
     SessionManager sessionManager = SessionManager.getInstance();
@@ -45,7 +43,7 @@ public class BimServerChatHandler extends AbstractDefaultMsgHandler {
             case CHAT_MSG_COMMISSION:
                 sendCommissionMsg(msg);
                 return;
-            default: log.warn("未处理的消息类型{}", msg.getMessageRequest().toString());
+            default: ;
         }
     }
 
@@ -55,7 +53,6 @@ public class BimServerChatHandler extends AbstractDefaultMsgHandler {
         List<ImSession> toSessions = sessionManager.getSessionByUserId(toUser);
         if (null == toSessions || toSessions.isEmpty()) {
             // 目标用户不在线
-            log.warn("未处理的消息类型{}", msg.getMessageRequest().toString());
             // todo 推到消息中兴
             return;
         } else {

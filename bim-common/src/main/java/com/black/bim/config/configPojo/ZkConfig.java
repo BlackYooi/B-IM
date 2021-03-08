@@ -3,14 +3,12 @@ package com.black.bim.config.configPojo;
 import com.black.bim.config.BimBaseConfig;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @description：
  * zk配置
  * @author：8568
  */
-@Slf4j
 public class ZkConfig extends BimBaseConfig {
 
     /**

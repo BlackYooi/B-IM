@@ -5,7 +5,6 @@ import com.black.bim.im.constant.LoginStatus;
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
-import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
 
@@ -13,7 +12,6 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  * @description：客户登录响应处理器
  * @author：8568
  */
-@Slf4j
 public class LoginResponseHandler extends AbstractDefaultMsgHandler {
 
     @Override
@@ -39,7 +37,6 @@ public class LoginResponseHandler extends AbstractDefaultMsgHandler {
     private Boolean isLoginSuccess(DefaultMessage message) {
         LoginResponse loginResponse = message.getLoginResponse();
         LoginStatus status = LoginStatus.getByCode(loginResponse.getCode());
-        log.info(String.format("登录是否成功：【%s】、描述：【%s】", status.isLogin(), status.getDesc()));
         if (status == LoginStatus.SUCCESS) {
             // 登录成功
             return true;

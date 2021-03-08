@@ -5,14 +5,10 @@ import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.ZkConfig;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.im.protobuf.DefaultProtoMsg;
-import com.black.bim.util.Either;
 import com.black.bim.zk.ZkClientFactory;
-import io.vavr.Tuple2;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.*;
 
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * 维护了节点关系网
  * @author：8568
  */
-@Slf4j
 public class WorkerRoute {
 
     /**
@@ -71,18 +66,14 @@ public class WorkerRoute {
             ChildData data = event.getData();
             switch (event.getType()) {
                 case CHILD_ADDED:
-                    log.info("CHILD_ADDED : " + data.getPath() + "  数据:" + data.getData());
                     processNodeAdded(data);
                     break;
                 case CHILD_REMOVED:
-                    log.info("CHILD_REMOVED : " + data.getPath() + "  数据:" + data.getData());
                     processNodeRemoved(data);
                     break;
                 case CHILD_UPDATED:
-                    log.info("CHILD_UPDATED : " + data.getPath() + "  数据:" + new String(data.getData()));
                     break;
                 default:
-                    log.debug("[PathChildrenCache]节点数据为空, path={}", data == null ? "null" : data.getPath());
                     break;
             }
         }
@@ -99,18 +90,12 @@ public class WorkerRoute {
             return;
         }
         node.setNodeId(nodeId);
-        log.info("[TreeCache]节点更新端口, path={}, data={}",
-                fullPath, node);
         if (node.equals(BimWorker.getInstance().getLocalNode())) {
-            log.info("[TreeCache]本地节点, path={}, data={}",
-                    fullPath, node);
             return;
         }
         PeerSender peerSender = workers.get(nodeId);
         // 重复收到注册的事件
         if (null != peerSender && peerSender.getNode().equals(node)) {
-            log.info("[TreeCache]节点重复增加, path={}, data={}",
-                    fullPath, node);
         }
         if (null != peerSender) {
             // 关闭老的连接
@@ -128,8 +113,6 @@ public class WorkerRoute {
 
         String nodeId = BimWorker.getInstance().parsingId(data.getPath());
         bimServerNodeInfo.setNodeId(nodeId);
-        log.info("[TreeCache]节点删除, path={}, data={}",
-                data.getPath(), bimServerNodeInfo);
         PeerSender peerSender = workers.get(bimServerNodeInfo.getNodeId());
 
         if (null != peerSender) {

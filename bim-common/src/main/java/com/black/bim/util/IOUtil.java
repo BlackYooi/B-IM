@@ -1,9 +1,7 @@
 package com.black.bim.util;
 
 import com.black.bim.exception.CanNotLoadPropertiesException;
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.Properties;
@@ -12,7 +10,6 @@ import java.util.Properties;
  * @description：
  * @author：8568
  */
-@Slf4j
 public class IOUtil {
 
     /**
@@ -33,7 +30,6 @@ public class IOUtil {
         try {
             ip = InetAddress.getLocalHost().getHostAddress();
         } catch (Exception ex) {
-            log.error("获取ip报错", ex.getMessage());
         }
         return ip;
     }

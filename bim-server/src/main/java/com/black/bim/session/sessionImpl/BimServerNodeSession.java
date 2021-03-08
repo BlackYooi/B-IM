@@ -7,13 +7,11 @@ import com.black.bim.entity.UserInfo;
 import com.black.bim.im.ImSession;
 import com.black.bim.session.sessionEntity.SessionCacheEntity;
 import io.vavr.control.Try;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 节点委托型session
  * @author 85689
  */
-@Slf4j
 public class BimServerNodeSession extends ImSession {
 
     /**

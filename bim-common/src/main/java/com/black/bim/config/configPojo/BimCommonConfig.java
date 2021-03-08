@@ -2,13 +2,11 @@ package com.black.bim.config.configPojo;
 
 import com.black.bim.config.BimBaseConfig;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @description：
  * @author：8568
  */
-@Slf4j
 @Data
 public class BimCommonConfig extends BimBaseConfig {
 

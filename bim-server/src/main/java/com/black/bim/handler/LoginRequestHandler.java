@@ -7,7 +7,6 @@ import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import com.black.bim.session.sessionImpl.BimServerLocalSession;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
 
@@ -16,7 +15,6 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  * @description：登录请求处理器
  * @author：8568
  */
-@Slf4j
 @ChannelHandler.Sharable
 public class LoginRequestHandler extends AbstractDefaultMsgHandler {
 
@@ -56,11 +54,9 @@ public class LoginRequestHandler extends AbstractDefaultMsgHandler {
             session.bind();
             result = true;
             session.writeAndFlush(responseMsg.setSessionId(session.getSessionId()).build());
-            log.info("登录成功， session: {}", session.toString());
         } else {
             session.writeAndFlush(responseMsg.build());
             session.close();
-            log.info("登录失败， session: {}", session.toString());
         }
         return result;
     }
@@ -81,7 +77,6 @@ public class LoginRequestHandler extends AbstractDefaultMsgHandler {
         //校验用户,比较耗时的操作,需要100 ms以上的时间 TODO
         //方法1：调用远程用户restfull 校验服务
         //方法2：调用数据库接口校验
-        log.info("用户名{}, 密码{}", user.getUserName(), user.getPassword());
         return LoginStatus.SUCCESS;
 
     }

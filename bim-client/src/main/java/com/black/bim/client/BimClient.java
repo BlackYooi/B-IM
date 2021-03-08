@@ -13,16 +13,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
-import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
+import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 import static com.black.bim.util.NotEmptyUtil.notEmptyOrThrow;
 
 /**
  * @description：
  * @author：8568
  */
-@Slf4j
 @NoArgsConstructor
 public class BimClient extends ImBaseClient {
 
@@ -56,25 +54,21 @@ public class BimClient extends ImBaseClient {
         try {
             initClient();
         } catch (Exception e) {
-            log.error("初始化服务器失败");
         }
     }
 
     @Override
     public boolean connectToServer() {
-        log.info("开始连接到服务器");
         try {
             ChannelFuture connect = b.connect().sync();
             if (connect.isSuccess()) {
                 // 连接成功时
                 BimClientSession bimClientSession = new BimClientSession(connect.channel());
                 bimClientSession.setConnected(true);
-                log.info("连接服务器成功");
                 setSession(bimClientSession);
                 return true;
             }
         } catch (Exception e) {
-            log.error(String.format("连接到服务器失败、原因【%s】", e.getMessage()));
         }
         return false;
     }
@@ -97,10 +91,8 @@ public class BimClient extends ImBaseClient {
                 channel.writeAndFlush(message).sync();
                 sendResult = true;
             } catch (InterruptedException e) {
-                log.error(String.format("发送消息到服务器出错、原因是【%s】", e.getMessage()));
             }
         } else {
-            log.error(String.format("发送消息到服务器出错、原因是【%s】", "通道已经关闭"));
         }
         return sendResult;
     }
@@ -111,7 +103,6 @@ public class BimClient extends ImBaseClient {
             ((BimClientSession)session).close();
             g.shutdownGracefully();
         } catch (Exception e) {
-            log.error(String.format("关闭客户端失败；原因【%s】", e.getMessage()));
         }
     }
 

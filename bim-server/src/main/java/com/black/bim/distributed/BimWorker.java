@@ -5,7 +5,6 @@ import com.black.bim.config.configPojo.ZkConfig;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.zk.ZkClientFactory;
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
@@ -16,7 +15,6 @@ import org.apache.zookeeper.data.Stat;
  * 当有新bim加入时创建节点、同步节点信息
  * @author：8568
  */
-@Slf4j
 public class BimWorker {
 
     /**

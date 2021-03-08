@@ -9,7 +9,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 
@@ -17,7 +16,6 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
  * @description：客户端的会话
  * @author：8568
  */
-@Slf4j
 public class BimClientSession extends ImSession {
 
     public static final AttributeKey<ImSession> SESSION_KEY = AttributeKey.valueOf("SESSION_KEY");
@@ -80,7 +78,7 @@ public class BimClientSession extends ImSession {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (close.isSuccess()) {
-                    log.info("close success");
+                    // TODO
                 }
             }
         });

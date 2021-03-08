@@ -3,9 +3,7 @@ package com.black.bim.config.configHolder;
 import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.BimServerConfig;
 import com.black.bim.util.IOUtil;
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import static com.black.bim.util.FunctionUtil.consumeIfValueNotNullOrThrow;
@@ -15,7 +13,6 @@ import static com.black.bim.util.PackingTypeUtil.parseIntOrNull;
  * @description：
  * @author：8568
  */
-@Slf4j
 public class BimServerHolder {
 
     private static BimServerConfig instance;

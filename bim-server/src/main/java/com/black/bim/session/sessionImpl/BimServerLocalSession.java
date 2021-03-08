@@ -5,14 +5,12 @@ import com.black.bim.im.ImSession;
 import com.black.bim.session.SessionManager;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @description：
  * 指的时存放在节点上的session
  * @author：8568
  */
-@Slf4j
 public class BimServerLocalSession extends ImSession {
 
     public static final AttributeKey<BimServerLocalSession> SESSION_KEY =

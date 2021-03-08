@@ -2,10 +2,6 @@ package com.black.bim.handler;
 
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.util.Optional;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
@@ -14,7 +10,6 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
  * @description：im异常处理器
  * @author：8568
  */
-@Slf4j
 public class ImExceptionHandler extends AbstractDefaultMsgHandler {
 
     /**
@@ -40,7 +35,6 @@ public class ImExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     protected void processMsg(ChannelHandlerContext ctx, DefaultMessage message) throws Exception {
-        log.info(message.toString());
         return;
     }
 }

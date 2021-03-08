@@ -9,7 +9,6 @@ import io.netty.channel.ChannelFutureListener;
 import io.vavr.control.Try;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +19,6 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  * @description：
  * @author：8568
  */
-@Slf4j
 public abstract class ImBaseClient implements AutoCloseable {
 
     /**
@@ -64,14 +62,12 @@ public abstract class ImBaseClient implements AutoCloseable {
             // 等待收到的登录响应包改变session状态
             do {
                 if (session.isLogin()) {
-                    log.info("登录成功");
                     return true;
                 }
                 Try.run(() -> TimeUnit.SECONDS.sleep(1));
                 i ++;
             } while (i < 5);
         }
-        log.info("登录失败");
         return loginSuccess;
     }
 

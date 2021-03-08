@@ -3,20 +3,15 @@ package com.black.bim.config.configHolder;
 import com.black.bim.config.BimConfigFactory;
 import com.black.bim.config.configPojo.RedisConfig;
 import com.black.bim.util.IOUtil;
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import static com.black.bim.util.PackingTypeUtil.parseIntOrNull;
-import static com.black.bim.util.PackingTypeUtil.parseLongOrNull;
-import static com.black.bim.util.PackingTypeUtil.parseBooleanOrNull;
+import static com.black.bim.util.PackingTypeUtil.*;
 
 /**
  * @description：
  * @author：8568
  */
-@Slf4j
 public class RedisHolder {
 
     private static RedisConfig instance;
