@@ -12,6 +12,7 @@ import com.black.bim.session.sessionEntity.UserCache;
 import com.black.bim.redis.BimRedis;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
@@ -42,12 +43,17 @@ public class SessionManager {
         if (null == instance) {
             instance = new SessionManager();
             instance.userCacheDao = new UserCacheRedisImpl(bimRedis);
-            //instance.sessionCacheDao = new SessionCacheRedisImpl(bimRedis);
         }
         return instance;
     }
 
     public void addSession(BimServerLocalSession localSession) {
+        if (null == localSession
+                || null == localSession.getUser()
+                || null == localSession.getUser().getUid()) {
+            throw new RuntimeException("session参数不能为空");
+        }
+        log.info("addSession: {}", localSession.toString());
         // 保存到会话清单
         sessionMap.put(localSession.getSessionId(), localSession);
         // 保存到redis
@@ -55,7 +61,6 @@ public class SessionManager {
         SessionCacheEntity sessionCache = new SessionCacheEntity(
                 localSession.getSessionId(),
                 BimServerNodeInfo.newNodeInfoFromInfoWithoutBalance(localNode));
-        //sessionCacheDao.save(sessionCache);
         // 增加用户的session 信息到用户缓存
         if (null == userCacheDao.get(localSession.getUser().getUid())) {
             // 新增会话
@@ -66,6 +71,7 @@ public class SessionManager {
             // 添加会话
             userCacheDao.addSession(localSession.getUser().getUid(), sessionCache);
         }
+        log.info("添加会话成功");
         // 更新负载数
         BimWorker.getInstance().incBalance();
         // TODO？ 通知其它服务器？
@@ -111,26 +117,27 @@ public class SessionManager {
     */
     public void closeSession(ChannelHandlerContext ctx) {
         ImSession session = ctx.channel().attr(BimServerLocalSession.SESSION_KEY).get();
-        if (null == session || !session.isLogin()) {
-            log.error("session is null or isValid");
-            return;
-        }
-        session.close();
-        //删除本地的会话和远程会话
-        this.removeSession(session);
+        Try.run(() -> {
+            // 删除本地的会话和远程会话
+            closeSession(session);
+            // 关闭通道
+            ctx.channel().closeFuture().sync();
+        });
 
     }
 
-    public void removeSession(ImSession session) {
+    public void closeSession(ImSession session) {
+        closeSession(session.getSessionId(), session.getUser().getUid());
+    }
+
+    public void closeSession(String sessionId, String userId) {
         // 如果本地缓存中没有、证明无此用户、直接返回
-        if (!sessionMap.containsKey(session.getSessionId())) {
+        if (!sessionMap.containsKey(sessionId)) {
             return;
         }
         // 删除会话
-        String sessionId = session.getSessionId();
         sessionMap.remove(sessionId);
-        //sessionCacheDao.remove(sessionId);
-        userCacheDao.removeSession(session.getUser().getUid(), sessionId);
+        userCacheDao.removeSession(userId, sessionId);
         // 减小节点负载
         BimWorker.getInstance().desBalance();
     }

@@ -40,6 +40,11 @@ public class RedisConfig extends BimBaseConfig {
 
     private Integer numTestsPerEvictionRun;
 
+    /**
+     * 连接池耗尽时是否阻塞getResource方法
+     * true: 阻塞
+     * false: 抛出异常
+    */
     private Boolean blockWhenExhausted;
 
     private Boolean testWhileIdle;

@@ -11,10 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
+import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 
 /**
  * @description：客户端的会话
@@ -75,10 +72,9 @@ public class BimClientSession extends ImSession {
     /**
      * 关闭
     */
-    @Override
     public void close() {
         isConnected = false;
-        super.setLogin(false);
+        setLogin(false);
         ChannelFuture close = channel.close();
         close.addListener(new ChannelFutureListener() {
             @Override

@@ -34,6 +34,7 @@ public class SessionCacheRedisImpl implements SessionCacheDAO {
         Jedis jedis = jedisPool.getResource();
         jedis.set(key, value);
         jedis.expire(key, redisConfig.getUserCacheKeepTime());
+        jedis.close();
     }
 
     @Override
@@ -44,6 +45,7 @@ public class SessionCacheRedisImpl implements SessionCacheDAO {
         if (null == s || s.isEmpty()) {
             return null;
         }
+        jedis.close();
         return JsonUtil.jsonStringToObject(s, SessionCacheEntity.class);
     }
 
@@ -52,6 +54,7 @@ public class SessionCacheRedisImpl implements SessionCacheDAO {
         String key = addPrefix(sessionId);
         Jedis jedis = jedisPool.getResource();
         jedis.del(key);
+        jedis.close();
     }
 
     private String addPrefix(String sourceKey) {

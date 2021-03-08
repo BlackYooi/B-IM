@@ -108,7 +108,7 @@ public class BimClient extends ImBaseClient {
     @Override
     public void closeClient() {
         try {
-            session.close();
+            ((BimClientSession)session).close();
             g.shutdownGracefully();
         } catch (Exception e) {
             log.error(String.format("关闭客户端失败；原因【%s】", e.getMessage()));

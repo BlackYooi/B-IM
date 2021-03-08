@@ -4,12 +4,8 @@ import com.black.bim.entity.UserInfo;
 import com.black.bim.im.ImSession;
 import com.black.bim.session.SessionManager;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @description：
@@ -41,7 +37,6 @@ public class BimServerLocalSession extends ImSession {
      * 用户登录成功时绑定会话
     */
     public BimServerLocalSession bind() {
-        log.info(" ServerSession 绑定会话 " + channel.remoteAddress());
         channel.attr(BimServerLocalSession.SESSION_KEY).set(this);
         setLogin(true);
         SessionManager instance = SessionManager.getInstance();
@@ -67,17 +62,13 @@ public class BimServerLocalSession extends ImSession {
         return user;
     }
 
-    @Override
     public synchronized void close() {
-        try {
-            ChannelFuture close = channel.close().sync();
-            if (close.isSuccess()) {
-                log.info("close success");
-                return;
-            }
-        } catch (InterruptedException e) {
-            log.error(String.format("关闭错误，原因【%s】", e.getMessage()));
-        }
-        log.error("关闭失败");
+        SessionManager.getInstance().closeSession(sessionId, user.getUid());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("\nsessionId: %s" +
+                "\nchannel:%s", sessionId, channel.id());
     }
 }

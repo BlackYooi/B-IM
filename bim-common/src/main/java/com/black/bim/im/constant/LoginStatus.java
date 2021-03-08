@@ -10,7 +10,7 @@ import java.util.Map;
 public enum LoginStatus {
 
     // 登录成功
-    SUCCESS(0, "Success", true),
+    SUCCESS(200, "Success", true),
     // 登录失败
     AUTH_FAILED(1, "账号或者密码错误", false),
     // 无授权码
@@ -26,6 +26,7 @@ public enum LoginStatus {
     LoginStatus(Integer code, String desc, boolean isLogin) {
         this.code = code;
         this.desc = desc;
+        this.isLogin = isLogin;
     }
 
     public Integer getCode() {

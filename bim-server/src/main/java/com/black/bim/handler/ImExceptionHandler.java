@@ -1,15 +1,11 @@
 package com.black.bim.handler;
 
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
-import com.black.bim.session.sessionImpl.BimServerLocalSession;
 import com.black.bim.session.SessionManager;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
+import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 
 /**
  * @description：im异常处理器
@@ -23,10 +19,7 @@ public class ImExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        Optional<BimServerLocalSession> session = SessionManager.getInstance().getChannelSession(ctx);
-        if (session.isPresent() && cause instanceof IOException) {
-            session.get().close();
-        }
+        SessionManager.getInstance().closeSession(ctx);
     }
 
     /**
@@ -35,8 +28,7 @@ public class ImExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     protected Boolean msgCouldProcess(DefaultMessage message) {
-        return message.getType().equals(HeadType.KEEPALIVE_REQUEST)
-                || message.getType().equals(HeadType.KEEPALIVE_RESPONSE);
+        return true;
     }
 
     /**
@@ -44,7 +36,6 @@ public class ImExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     protected void processMsg(ChannelHandlerContext ctx, DefaultMessage message) throws Exception {
-        log.info(message.toString());
         return;
     }
 }

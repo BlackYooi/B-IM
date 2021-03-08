@@ -42,10 +42,5 @@ public class BimServerNodeSession extends ImSession {
     public UserInfo getUser() {
         return user;
     }
-
-    @Override
-    public void close() {
-
-    }
 }
 

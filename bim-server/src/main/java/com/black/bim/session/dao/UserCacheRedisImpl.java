@@ -35,6 +35,7 @@ public class UserCacheRedisImpl implements UserCacheDAO {
         Jedis jedis = jedisPool.getResource();
         jedis.set(key, value);
         jedis.expire(key, redisConfig.getUserCacheKeepTime());
+        jedis.close();
     }
 
     @Override
@@ -45,6 +46,7 @@ public class UserCacheRedisImpl implements UserCacheDAO {
         if (null == s || s.isEmpty()) {
             return null;
         }
+        jedis.close();
         return JsonUtil.GSON.fromJson(s, UserCache.class);
     }
 
@@ -60,6 +62,7 @@ public class UserCacheRedisImpl implements UserCacheDAO {
         String key = addPrefix(userUid);
         jedis.set(key, value);
         jedis.expire(key, redisConfig.getUserCacheKeepTime());
+        jedis.close();
      }
 
     @Override
@@ -68,11 +71,16 @@ public class UserCacheRedisImpl implements UserCacheDAO {
         if (null == userCache) {
             return;
         }
-        userCache.removeSession(sessionId);
-        String value = JsonUtil.objectToJson(userCache);
         Jedis jedis = jedisPool.getResource();
         String key = addPrefix(userUid);
-        jedis.set(key, value);
+        userCache.removeSession(sessionId);
+        if (null == userCache.getSessions() || userCache.getSessions().isEmpty()) {
+            jedis.del(key);
+        } else {
+            String value = JsonUtil.objectToJson(userCache);
+            jedis.set(key, value);
+        }
+        jedis.close();
     }
 
     private String addPrefix(String sourceKey) {

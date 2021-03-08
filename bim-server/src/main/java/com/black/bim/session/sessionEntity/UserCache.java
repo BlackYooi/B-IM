@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -38,10 +39,10 @@ public class UserCache implements Serializable {
      * 为用户移除session
     */
     public void removeSession(String sessionId) {
-        for (SessionCacheEntity sessionCacheEntity : sessions) {
-            if (sessionCacheEntity.getSessionId().equals(sessionId)) {
-                sessions.remove(sessionCacheEntity);
-            }
+        if (null != sessions) {
+            sessions = sessions.stream()
+                    .filter(s -> !s.getSessionId().equals(sessionId))
+                    .collect(Collectors.toList());
         }
     }
 

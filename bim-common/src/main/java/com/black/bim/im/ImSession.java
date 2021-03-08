@@ -59,14 +59,6 @@ public abstract class ImSession implements Serializable {
     public abstract UserInfo getUser();
 
     /**
-     * Description: 关闭seesion
-     *
-     * @param
-     * @return: void
-    */
-    public abstract void close();
-
-    /**
      * sessionId生成
      */
     protected String buildNewSessionId() {
