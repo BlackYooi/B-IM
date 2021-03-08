@@ -3,6 +3,7 @@ package com.black.bim.handler;
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import com.black.bim.session.SessionManager;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 
@@ -10,6 +11,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
  * @description：im异常处理器
  * @author：8568
  */
+@Slf4j
 public class BimServerExceptionHandler extends AbstractDefaultMsgHandler {
 
     /**
@@ -34,6 +36,7 @@ public class BimServerExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     protected void processMsg(ChannelHandlerContext ctx, DefaultMessage message) throws Exception {
+        log.info("未处理的bim消息【{}】", message);
         return;
     }
 }

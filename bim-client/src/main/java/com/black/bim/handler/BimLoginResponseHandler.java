@@ -1,6 +1,8 @@
 package com.black.bim.handler;
 
 import com.black.bim.client.BimClientSession;
+import com.black.bim.config.BimConfigFactory;
+import com.black.bim.config.configPojo.BimCommonConfig;
 import com.black.bim.im.constant.LoginStatus;
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,6 +16,8 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  */
 public class BimLoginResponseHandler extends AbstractDefaultMsgHandler {
 
+    BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
+
     @Override
     protected Boolean msgCouldProcess(DefaultMessage message) {
         return HeadType.LOGIN_RESPONSE.equals(message.getType());
@@ -26,7 +30,7 @@ public class BimLoginResponseHandler extends AbstractDefaultMsgHandler {
             // 保存会话
             BimClientSession.loginSuccess(ctx, message);
             // 在编码器后面添加心跳处理器
-            pipeline.addAfter("encode", "heatBeat", new BimHeartBeatClientHandler());
+            pipeline.addAfter("encode", "heatBeat", new BimHeartBeatClientHandler(Long.valueOf(commonConfig.getHeartBeatInterval())));
             // 移除登录响应器
             pipeline.remove(this);
         } else {

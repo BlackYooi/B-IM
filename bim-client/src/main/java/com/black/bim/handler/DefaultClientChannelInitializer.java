@@ -19,10 +19,10 @@ public class DefaultClientChannelInitializer extends ChannelInitializer<SocketCh
         // 编码器
         ch.pipeline().addLast("encode", new DefaultMsgEncoder());
         // 登录响应处理器
-        ch.pipeline().addLast(new BimLoginResponseHandler());
+        ch.pipeline().addLast("login", new BimLoginResponseHandler());
         // 消息处理器
-        ch.pipeline().addLast(new ChatMsgPrintHandler());
+        ch.pipeline().addLast("chat", new ChatMsgPrintHandler());
         // 异常处理器
-        ch.pipeline().addLast(new BimClientExceptionHandler());
+        ch.pipeline().addLast("exception", new BimClientExceptionHandler());
     }
 }

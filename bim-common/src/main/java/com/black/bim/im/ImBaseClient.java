@@ -31,12 +31,25 @@ public abstract class ImBaseClient implements AutoCloseable {
     protected ImSession session;
 
     /**
+     * 用户信息、即时连接断开也不会清空用户信息
+    */
+    protected UserInfo userInfo;
+
+    /**
      * Description: 连接到服务器
      *
      * @param
      * @return: void
     */
     protected abstract boolean connectToServer();
+
+    /**
+     * Description: 断线时调用此方法可以重连
+     *
+     * @param
+     * @return: boolean
+    */
+    public abstract boolean reConnect();
 
     /**
      * Description: 同步登录服务器
@@ -46,8 +59,10 @@ public abstract class ImBaseClient implements AutoCloseable {
     */
     public boolean login(UserInfo u) {
         boolean result = false;
+        userInfo = u;
         if (connectToServer()) {
-            result = doLogin(u);
+            session.setUser(u);
+            result = doLogin(ofLoginMsg(session));
         }
         if (false == result) {
             log.info("登录失败");
@@ -57,10 +72,16 @@ public abstract class ImBaseClient implements AutoCloseable {
         return result;
     }
 
-    private boolean doLogin(UserInfo u) {
+    /**
+     * 该方法用于断线重连、仅在内部调用、userInfo来自与上一次登录时设置的用户信息
+    */
+    protected boolean login() {
+        log.info("开始重新登录");
+        return login(userInfo);
+    }
+
+    private boolean doLogin(DefaultMessage loginMsg) {
         boolean loginSuccess = false;
-        session.setUser(u);
-        DefaultMessage loginMsg = ofLoginMsg(session);
         if (sendMsgSync(loginMsg)) {
             int i = 0;
             // 等待收到的登录响应包改变session状态
@@ -112,6 +133,16 @@ public abstract class ImBaseClient implements AutoCloseable {
                 .setAppVersion(String.valueOf(config.getVersionNumber()))
                 .setUid(u.getUid())
                 .setJson(new Gson().toJson(u))
+                .build();
+        return message.toBuilder().setLoginRequest(black).build();
+    }
+
+    private DefaultMessage ofLoginMsg(String token) {
+        BimCommonConfig config = BimConfigFactory.getConfig(BimCommonConfig.class);
+        DefaultMessage message = buildCommon(-1, HeadType.LOGIN_REQUEST, null);
+        LoginRequest black = LoginRequest.newBuilder()
+                .setAppVersion(String.valueOf(config.getVersionNumber()))
+                .setToken(token)
                 .build();
         return message.toBuilder().setLoginRequest(black).build();
     }

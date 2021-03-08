@@ -11,19 +11,16 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
-import static com.black.bim.util.NotEmptyUtil.notEmptyOrThrow;
 
 /**
  * @description：
  * @author：8568
  */
 @Slf4j
-@NoArgsConstructor
 public class BimClient extends ImBaseClient {
 
     @Getter
@@ -38,25 +35,25 @@ public class BimClient extends ImBaseClient {
     @Getter
     private ChannelInitializer<SocketChannel> channelInitializer = null;
 
-    /**
-     * 是否采用的默认的消息协议
-    */
-    private boolean isDefaultMsg = false;
+    @Getter
+    private static BimClient clientCache;
+
+    private BimClient() {
+        try {
+            initClient();
+            clientCache = this;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("初始化客户端失败{}", e.getMessage());
+        }
+    }
 
     /**
      * 创建一个默认消息协议的客户端
     */
     public static BimClient defaultClient () {
-        BimClient client = new BimClient(true);
+        BimClient client = new BimClient();
         return client;
-    }
-
-    public BimClient(Boolean isDefaultMsg) {
-        this.isDefaultMsg = isDefaultMsg;
-        try {
-            initClient();
-        } catch (Exception e) {
-        }
     }
 
     @Override
@@ -72,6 +69,23 @@ public class BimClient extends ImBaseClient {
                 return true;
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            log.error("连接到服务器失败，{}", e.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean reConnect() {
+        try {
+            initClient();
+            clientCache = this;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("初始化客户端失败{}", e.getMessage());
+        }
+        if (login()) {
+            return true;
         }
         return false;
     }
@@ -121,13 +135,7 @@ public class BimClient extends ImBaseClient {
         b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
         b.remoteAddress(serverNodeInfo.getHost(), serverNodeInfo.getPort());
         // 通道初始化
-        if (!isDefaultMsg) {
-            // 如果是用户自定义协议、检查是否传入了该协议的处理方式
-            notEmptyOrThrow(channelInitializer);
-            b.handler(channelInitializer);
-        } else {
-            // 默认通讯协议的处理方式
-            b.handler(new DefaultClientChannelInitializer());
-        }
+        // 默认通讯协议的处理方式
+        b.handler(new DefaultClientChannelInitializer());
     }
 }

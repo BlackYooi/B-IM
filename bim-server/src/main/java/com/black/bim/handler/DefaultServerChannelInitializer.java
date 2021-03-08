@@ -1,5 +1,7 @@
 package com.black.bim.handler;
 
+import com.black.bim.config.BimConfigFactory;
+import com.black.bim.config.configPojo.BimCommonConfig;
 import com.black.bim.im.codec.DefaultMsgDecoder;
 import com.black.bim.im.codec.DefaultMsgEncoder;
 import io.netty.channel.ChannelInitializer;
@@ -13,6 +15,7 @@ public class DefaultServerChannelInitializer extends ChannelInitializer<SocketCh
 
     BimLoginRequestHandler loginRequestHandler = new BimLoginRequestHandler();
     BimServerChatHandler chatHandler = new BimServerChatHandler();
+    BimCommonConfig commonConfig = BimConfigFactory.getConfig(BimCommonConfig.class);
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
@@ -21,16 +24,16 @@ public class DefaultServerChannelInitializer extends ChannelInitializer<SocketCh
         // 编码器
         ch.pipeline().addLast("encode", new DefaultMsgEncoder());
         // 心跳
-        ch.pipeline().addLast("heartBeat", new BimHearBeatServerHandler());
+        ch.pipeline().addLast("heartBeat", new BimHearBeatServerHandler(Long.valueOf(commonConfig.getHeartBeatInterval())));
         // 权限验证
         ch.pipeline().addLast("check", new BimCheckUserHandler());
         // 处理登录
-        ch.pipeline().addLast(loginRequestHandler);
+        ch.pipeline().addLast("login", loginRequestHandler);
         // 通知消息处理器
-        ch.pipeline().addLast(new BimNotifyHandler());
+        ch.pipeline().addLast("notify", new BimNotifyHandler());
         // 消息处理
-        ch.pipeline().addLast(this.chatHandler);
+        ch.pipeline().addLast("chat", this.chatHandler);
         // 异常处理
-        ch.pipeline().addLast(new BimServerExceptionHandler());
+        ch.pipeline().addLast("exception", new BimServerExceptionHandler());
     }
 }

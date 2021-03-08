@@ -31,16 +31,22 @@ public class BimCheckUserHandler extends AbstractDefaultMsgHandler {
         switch (message.getType()) {
             case UNRECOGNIZED:
                 processIllegalMsg(message, ctx);
-                return;
+                break;
             case LOGIN_REQUEST:
                 topChanelRead(ctx, message);
-                return;
+                break;
             case MESSAGE_REQUEST:
                 processMsgRq(message, ctx);
-                return;
+                break;
+            case KEEPALIVE_REQUEST:
+                topChanelRead(ctx, message);
+                break;
+            case KEEPALIVE_RESPONSE:
+                topChanelRead(ctx, message);
+                break;
             case MESSAGE_NOTIFICATION:
                 processMsgNotify(message, ctx);
-                return;
+                break;
             default: processIllegalMsg(message, ctx);
         }
     }

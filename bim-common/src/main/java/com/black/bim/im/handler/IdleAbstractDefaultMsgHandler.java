@@ -1,15 +1,20 @@
 package com.black.bim.im.handler;
 
+import com.black.bim.im.protobuf.DefaultProtoMsg;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleStateHandler;
 
-import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @description：消息处理器抽象类；子类实现不同消息类型的处理逻辑、或者相同消息的不同处理逻辑
+ * @description：
  * @author：8568
  */
-public abstract class AbstractDefaultMsgHandler extends ChannelInboundHandlerAdapter {
+public abstract class IdleAbstractDefaultMsgHandler extends IdleStateHandler {
+
+    public IdleAbstractDefaultMsgHandler(long readerIdleTime, long writerIdleTime, long allIdleTime, TimeUnit unit) {
+        super(readerIdleTime, writerIdleTime, allIdleTime, unit);
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -17,7 +22,7 @@ public abstract class AbstractDefaultMsgHandler extends ChannelInboundHandlerAda
             super.channelRead(ctx, msg);
             return;
         }
-        DefaultMessage message = (DefaultMessage) msg;
+        DefaultProtoMsg.ProtoMsg.DefaultMessage message = (DefaultProtoMsg.ProtoMsg.DefaultMessage) msg;
         if (msgCouldProcess(message)) {
             processMsg(ctx, message);
         } else {
@@ -33,22 +38,23 @@ public abstract class AbstractDefaultMsgHandler extends ChannelInboundHandlerAda
      * @param ctx
      * @param msg
      * @return: void
-    */
+     */
     protected void topChanelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead(ctx, msg);
     }
 
     private boolean notMsg(Object msg) {
-        return null == msg || !(msg instanceof DefaultMessage);
+        return null == msg || !(msg instanceof DefaultProtoMsg.ProtoMsg.DefaultMessage);
     }
 
     /**
      * 返回消息类型是否是自己干兴趣的消息类型
      */
-    protected abstract Boolean msgCouldProcess(DefaultMessage message);
+    protected abstract Boolean msgCouldProcess(DefaultProtoMsg.ProtoMsg.DefaultMessage message);
 
     /**
      * Description: 不同消息类型的处理逻辑、或者相同消息的不同处理逻辑; 需要子类做具体实现
-    */
-    protected abstract void processMsg(ChannelHandlerContext ctx, DefaultMessage message) throws Exception;
+     */
+    protected abstract void processMsg(ChannelHandlerContext ctx, DefaultProtoMsg.ProtoMsg.DefaultMessage message) throws Exception;
+
 }
