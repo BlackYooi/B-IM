@@ -1,6 +1,7 @@
 package com.black.bim.im.handler;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -12,6 +13,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
  * @description：处理消息请求、处理方式：日志展示
  * @author：8568
  */
+@Slf4j
 public class DefaultMsgHandler extends AbstractDefaultMsgHandler {
 
     protected BiConsumer<ChannelHandlerContext, DefaultMessage> consumer = null;
@@ -63,7 +65,6 @@ public class DefaultMsgHandler extends AbstractDefaultMsgHandler {
      * 当未指定消费者时、控制台打印
     */
     private void defaultProcessMsg(ChannelHandlerContext ctx, DefaultMessage message) {
-        // TODO
-        System.out.println(String.format("收到消息、内容是【%s】", message.toString()));
+        log.info(String.format("收到消息、内容是【%s】", message.toString()));
     }
 }

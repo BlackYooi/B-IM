@@ -6,6 +6,7 @@ import com.black.bim.config.configPojo.ZkConfig;
 import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.im.protobuf.DefaultProtoMsg;
 import com.black.bim.zk.ZkClientFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.*;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 维护了节点关系网
  * @author：8568
  */
+@Slf4j
 public class WorkerRoute {
 
     /**
@@ -72,6 +74,7 @@ public class WorkerRoute {
                     processNodeRemoved(data);
                     break;
                 case CHILD_UPDATED:
+                    log.info("节点更新，data: 【{}】", new String(data.getData(), "UTF-8"));
                     break;
                 default:
                     break;
@@ -105,6 +108,7 @@ public class WorkerRoute {
         peerSender = new PeerSender(node);
         peerSender.doConnect();
         workers.put(nodeId, peerSender);
+        log.info("节点上线：id【{}】", nodeId);
     }
 
     private void processNodeRemoved(ChildData data) {
@@ -119,6 +123,7 @@ public class WorkerRoute {
             peerSender.stopConnecting();
             workers.remove(nodeId);
         }
+        log.info("节点下线：id【{}】", nodeId);
     }
 
     /**

@@ -13,6 +13,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 import static com.black.bim.util.NotEmptyUtil.notEmptyOrThrow;
@@ -21,6 +22,7 @@ import static com.black.bim.util.NotEmptyUtil.notEmptyOrThrow;
  * @description：
  * @author：8568
  */
+@Slf4j
 @NoArgsConstructor
 public class BimClient extends ImBaseClient {
 
@@ -58,7 +60,7 @@ public class BimClient extends ImBaseClient {
     }
 
     @Override
-    public boolean connectToServer() {
+    protected boolean connectToServer() {
         try {
             ChannelFuture connect = b.connect().sync();
             if (connect.isSuccess()) {
@@ -66,6 +68,7 @@ public class BimClient extends ImBaseClient {
                 BimClientSession bimClientSession = new BimClientSession(connect.channel());
                 bimClientSession.setConnected(true);
                 setSession(bimClientSession);
+                log.info("成功连接到服务器");
                 return true;
             }
         } catch (Exception e) {
@@ -108,6 +111,7 @@ public class BimClient extends ImBaseClient {
 
     private void initClient() throws Exception {
         BimServerNodeInfo serverNodeInfo = BimLoadBalance.getServer();
+        log.info("服务节点：" + serverNodeInfo);
         BimLoadBalance.closeZK();
         b = new Bootstrap();
         g = new NioEventLoopGroup();

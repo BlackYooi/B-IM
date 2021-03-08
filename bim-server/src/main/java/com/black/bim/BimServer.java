@@ -15,6 +15,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 
@@ -25,6 +26,7 @@ import static com.black.bim.util.NotEmptyUtil.notEmptyOrThrow;
  * @description：
  * @author：8568
  */
+@Slf4j
 public class BimServer extends ImBaseServer {
 
     /**
@@ -74,6 +76,7 @@ public class BimServer extends ImBaseServer {
     @Override
     public void run() throws Exception {
         tryRun();
+        log.info("服务器启动成功，监听端口：【{}】", serverConfig.getPort());
     }
 
     @Override

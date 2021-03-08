@@ -7,6 +7,7 @@ import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import com.black.bim.session.sessionImpl.BimServerLocalSession;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
 
@@ -15,6 +16,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.*;
  * @description：登录请求处理器
  * @author：8568
  */
+@Slf4j
 @ChannelHandler.Sharable
 public class LoginRequestHandler extends AbstractDefaultMsgHandler {
 
@@ -54,9 +56,11 @@ public class LoginRequestHandler extends AbstractDefaultMsgHandler {
             session.bind();
             result = true;
             session.writeAndFlush(responseMsg.setSessionId(session.getSessionId()).build());
+            log.info("用户【{}】登录成功", u.getUid());
         } else {
             session.writeAndFlush(responseMsg.build());
             session.close();
+            log.info("用户【{}】登录失败", u.getUid());
         }
         return result;
     }

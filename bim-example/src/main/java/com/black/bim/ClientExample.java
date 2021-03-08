@@ -14,13 +14,11 @@ public class ClientExample {
     public static void main(String[] args) {
         BimClient client = BimClient.defaultClient();
         // connect to server
-        if (client.connectToServer()) {
-            DefaultUserInfo userInfo = new DefaultUserInfo();
-            userInfo.setUid("black");
-            userInfo.setUserName("qq85689049");
-            userInfo.setPassword("qq85689049");
-            client.login(userInfo);
-        }
+        DefaultUserInfo userInfo = new DefaultUserInfo();
+        userInfo.setUid("black");
+        userInfo.setUserName("qq85689049");
+        userInfo.setPassword("qq85689049");
+        client.login(userInfo);
         // send msg
         Try.run(() -> TimeUnit.HOURS.sleep(1));
     }
