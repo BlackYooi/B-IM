@@ -1,7 +1,10 @@
 package com.black.bim.handler;
 
+import com.black.bim.client.BimClient;
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.io.IOException;
 
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
@@ -17,7 +20,10 @@ public class BimClientExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-
+        if (cause instanceof IOException) {
+            BimClient.defaultClient().reConnect();
+        }
+        System.out.println();
     }
 
     /**

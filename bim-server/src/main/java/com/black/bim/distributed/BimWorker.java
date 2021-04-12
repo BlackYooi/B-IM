@@ -50,7 +50,6 @@ public class BimWorker {
     }
 
     public void init() {
-        client.start();
         // 根据需要看是否创建父节点
         createParentIfNeeded();
         // 创建临时节点、节点上保存bimNode

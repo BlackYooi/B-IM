@@ -6,7 +6,10 @@ import com.black.bim.entity.BimServerNodeInfo;
 import com.black.bim.im.exception.NoAvailableServerException;
 import com.black.bim.util.Either;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,13 +24,18 @@ public class BimLoadBalance {
 
     private static ZkConfig zkConfig;
 
-    public static BimServerNodeInfo getServer() throws Exception {
+    /**
+     * Description:
+     *
+     * @param invalidNodes 无效的节点列表
+     * @return: com.black.bim.entity.BimServerNodeInfo
+    */
+    public static BimServerNodeInfo getServer(List<BimServerNodeInfo> invalidNodes) throws Exception {
         // 取得负载最小的节点
         try {
             zkConfig = BimConfigFactory.getConfig(ZkConfig.class);
             client = ZkClientFactory.getClientSingleInstanceByConfig();
-            client.start();
-            BimServerNodeInfo bimServerNodeInfo = client.getChildren().forPath(zkConfig.getWorkerManagePath()).stream()
+            Optional<BimServerNodeInfo> first = client.getChildren().forPath(zkConfig.getWorkerManagePath()).stream()
                     // 匹配成全路径
                     .map(BimLoadBalance::getPathRegistered)
                     // 获取bimNode
@@ -37,11 +45,14 @@ public class BimLoadBalance {
                     .filter(Optional::isPresent)
                     .map(Optional<byte[]>::get)
                     .map(BimServerNodeInfo::creatByJsonByte)
+                    .filter(i -> !invalidNodes.contains(i))
                     // 获取负载最小的节点
                     .sorted(BimLoadBalance::compareByBalance)
-                    .findFirst()
-                    .get();
-            return bimServerNodeInfo;
+                    .findFirst();
+            if (!first.isPresent()) {
+                throw new NoAvailableServerException();
+            }
+            return first.get();
         } catch (Exception e) {
             client.close();
             throw new NoAvailableServerException();

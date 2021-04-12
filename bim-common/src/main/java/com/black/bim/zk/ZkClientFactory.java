@@ -60,6 +60,16 @@ public class ZkClientFactory
             ZkConfig instance = BimConfigFactory.getConfig(ZkConfig.class);
             client = createSimple(instance.getConnectionString());
         }
+        switch (client.getState()) {
+            case LATENT:
+                client.start();
+                break;
+            case STOPPED:
+                ZkConfig instance = BimConfigFactory.getConfig(ZkConfig.class);
+                client = createSimple(instance.getConnectionString());
+                client.start();
+                break;
+        }
         return client;
     }
 }

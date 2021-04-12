@@ -27,12 +27,12 @@ public abstract class ImBaseClient implements AutoCloseable {
      * 保存了连接的会话
     */
     @Getter
-    @Setter
     protected ImSession session;
 
     /**
      * 用户信息、即时连接断开也不会清空用户信息
     */
+    @Getter
     protected UserInfo userInfo;
 
     /**
