@@ -24,11 +24,6 @@ public class BimHearBeatServerHandler extends IdleAbstractDefaultMsgHandler {
 
     private static BimCommonConfig config = BimConfigFactory.getConfig(BimCommonConfig.class);
 
-    /**
-     * 记录未收到服务心跳响应的次数
-     */
-    private AtomicInteger noResponseTime = new AtomicInteger(0);
-
     public BimHearBeatServerHandler(long heartBeatInterval) {
         super(heartBeatInterval, 0, 0, TimeUnit.SECONDS);
     }
@@ -65,11 +60,5 @@ public class BimHearBeatServerHandler extends IdleAbstractDefaultMsgHandler {
     }
 
     private void whileNoPong(ChannelHandlerContext ctx) {
-        log.error("未收到心跳请求， 次数{}", noResponseTime.incrementAndGet());
-        if (noResponseTime.get() >= 3) {
-            log.error("连续三次未收到心跳请求、关闭连接");
-            noResponseTime.set(0);
-            SessionManager.getInstance().closeSession(ctx);
-        }
     }
 }

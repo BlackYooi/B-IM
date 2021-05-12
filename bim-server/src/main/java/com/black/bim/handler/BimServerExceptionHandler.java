@@ -5,6 +5,8 @@ import com.black.bim.session.SessionManager;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.DefaultMessage;
 
 /**
@@ -19,7 +21,10 @@ public class BimServerExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        SessionManager.getInstance().closeSession(ctx);
+        if (cause instanceof IOException) {
+            log.info("客户端断开连接、关闭session");
+            SessionManager.getInstance().closeSession(ctx);  
+        }
     }
 
     /**
@@ -36,7 +41,7 @@ public class BimServerExceptionHandler extends AbstractDefaultMsgHandler {
     */
     @Override
     protected void processMsg(ChannelHandlerContext ctx, DefaultMessage message) throws Exception {
-        log.info("未处理的bim消息【{}】", message);
+        //log.info("未处理的bim消息【{}】", message);
         return;
     }
 }

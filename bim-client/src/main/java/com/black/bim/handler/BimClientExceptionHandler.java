@@ -3,6 +3,7 @@ package com.black.bim.handler;
 import com.black.bim.client.BimClient;
 import com.black.bim.im.handler.AbstractDefaultMsgHandler;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import static com.black.bim.im.protobuf.DefaultProtoMsg.ProtoMsg.HeadType;
  * @description：im异常处理器
  * @author：8568
  */
+@Slf4j
 public class BimClientExceptionHandler extends AbstractDefaultMsgHandler {
 
     /**
@@ -21,6 +23,7 @@ public class BimClientExceptionHandler extends AbstractDefaultMsgHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof IOException) {
+            log.info("服务器下线；客户端尝试重新连接");
             BimClient.defaultClient().reConnect();
         }
         System.out.println();
